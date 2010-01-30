@@ -6,7 +6,7 @@ package{
   import flash.utils.*;
   
   public class PlayState extends GameState {
-    private var levelXML: XML = 
+    public static var levelXML: XML = 
       <level>
         <layer>
           <sprite x="300" y="200" rotation="0"  type="water"/>
@@ -44,6 +44,10 @@ package{
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
       stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
       
+			var ns: Namespace = levelXML.namespace("");
+			
+			trace("parsing", levelXML.toXMLString());
+			
       for each (var layerXML: XML in levelXML.children()) {
         switch (String(layerXML.localName())) {
           case "layer": 
