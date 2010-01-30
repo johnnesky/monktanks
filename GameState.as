@@ -5,14 +5,18 @@ package{
   import flash.text.*;
   import flash.utils.*;
   
-  public class Entity extends Sprite {
+  public class GameState extends Sprite {
 
-    public function Entity(x: Number, y: Number){
-      this.x = x;
-      this.y = y;
+    public function GameState() {
+      
     }
     
     public function update(ticks: int): void {
+      
+    }
+    
+    public function destroy(): void {
+      
     }
   }
 }

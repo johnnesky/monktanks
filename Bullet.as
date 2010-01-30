@@ -15,18 +15,17 @@ package{
       graphics.endFill();
     }
     
-    override public function update(): void {
-      var ticktime : int = 33;
+    override public function update(ticks: int): void {
         /*
       if (currentAction == ACTION_FORWARD)
       {
-        this.x += speed * Math.cos(rotation*Math.PI/180) * ticktime/1000;
-        this.y += speed * Math.sin(rotation*Math.PI/180) * ticktime/1000;
+        this.x += speed * Math.cos(rotation*Math.PI/180) * ticks/1000;
+        this.y += speed * Math.sin(rotation*Math.PI/180) * ticks/1000;
       }
       else if (currentAction == ACTION_BACK)
       {
-        this.x -= speed * Math.cos(rotation*Math.PI/180) * ticktime/1000;
-        this.y -= speed * Math.sin(rotation*Math.PI/180) * ticktime/1000;
+        this.x -= speed * Math.cos(rotation*Math.PI/180) * ticks/1000;
+        this.y -= speed * Math.sin(rotation*Math.PI/180) * ticks/1000;
       }
       else if (currentAction == ACTION_LEFT)
       {
