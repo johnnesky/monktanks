@@ -38,6 +38,12 @@ package{
       addChild(entity);
     }
     
+    public function removeEntity(entity: Entity): void {
+      removeChild(entity);
+      var i : int = entities.indexOf(entity, 0);
+      entities.splice(i, 1);
+    }
+    
     public override function update(ticks: int): void {
       for each (var entity: Entity in entities) {
         entity.update(33);

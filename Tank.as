@@ -6,9 +6,8 @@ package{
   import flash.utils.*;
   
   public class Tank extends Entity {
-    
-		[Embed(source="Tank1.png")]
-		private static var tankImage: Class;
+    [Embed(source="Tank1.png")]
+    private static var tankImage: Class;
     
     public static const ACTION_NONE:    int = 0;
     public static const ACTION_FORWARD: int = 1;
@@ -18,21 +17,21 @@ package{
     public static const ACTION_FIRE:    int = 5;
     public static const ACTION_CLONE:   int = 6;
         
-
+    private var bKeyForward : Boolean = false;
+    private var bKeyBack    : Boolean = false;
+    private var bKeyLeft    : Boolean = false;
+    private var bKeyRight   : Boolean = false;
+    
     public var currentAction : int = ACTION_NONE;
-
-    public var speed         : Number = 30.0;
-
-    public var rotationSpeed : Number = 50.0;
-
+    public var speed         : Number = 80.0;
+    public var rotationSpeed : Number = 120.0;
+    private var reloadTime   : int = 0     // ms until recharge is complete
+    private var reloadMax    : int = 3500  // ms required for total recharge
     private var mainInstance : PlayState
-
     
     public function Tank(x: Number, y: Number, inst: PlayState){
       super(x,y);
-
       mainInstance = inst;
-
       var bitmap: Bitmap = new tankImage();
       bitmap.width = 50;
       bitmap.height = 50;
@@ -42,79 +41,70 @@ package{
     }
 
     public function keydown(action: int, pressed: Boolean): void {
-
-      if (pressed == false)
-
+      if (action == ACTION_FORWARD)
+        bKeyForward = pressed
+      else if (action == ACTION_BACK)
+        bKeyBack = pressed
+      else if (action == ACTION_LEFT)
+        bKeyLeft = pressed
+      else if (action == ACTION_RIGHT)
+        bKeyRight = pressed
+      else if (action == ACTION_FIRE && pressed && reloadTime <= 0)
       {
-
-        currentAction = ACTION_NONE;
-
-      }
-
-      else if (action == ACTION_FORWARD || action == ACTION_BACK
-
-            || action == ACTION_LEFT    || action == ACTION_RIGHT)
-
-      {
-
-        currentAction = action;
-
-      }
-
-      else if (action == ACTION_FIRE)
-
-      {
-
-        var bullet : Bullet = new Bullet(x, y, rotation);
-
+        var bullet : Bullet = new Bullet(x, y, rotation, mainInstance);
         mainInstance.addEntity(bullet)
-
+        reloadTime = reloadMax
       }
-
-      else if (action == ACTION_CLONE)
-
+      else if (action == ACTION_CLONE && pressed)
       {
-
       }
+      
+      if (bKeyLeft)
+        currentAction = ACTION_LEFT
+      else if (bKeyRight)
+        currentAction = ACTION_RIGHT
+      else if (bKeyForward)
+        currentAction = ACTION_FORWARD
+      else if (bKeyBack)
+        currentAction = ACTION_BACK
+      else
+        currentAction = ACTION_NONE
     }
     
     override public function update(ticks: int): void {
-
-      var ticktime : int = 33;
-
       if (currentAction == ACTION_FORWARD)
-
       {
-        this.x += speed * Math.cos(rotation*Math.PI/180) * ticktime/1000;
-
-        this.y += speed * Math.sin(rotation*Math.PI/180) * ticktime/1000;
-
+        this.x += speed * Math.cos(rotation*Math.PI/180) * ticks/1000;
+        this.y += speed * Math.sin(rotation*Math.PI/180) * ticks/1000;
       }
-
       else if (currentAction == ACTION_BACK)
-
       {
-
-        this.x -= speed * Math.cos(rotation*Math.PI/180) * ticktime/1000;
-
-        this.y -= speed * Math.sin(rotation*Math.PI/180) * ticktime/1000;
-
+        this.x -= speed * Math.cos(rotation*Math.PI/180) * ticks/1000;
+        this.y -= speed * Math.sin(rotation*Math.PI/180) * ticks/1000;
       }
-
       else if (currentAction == ACTION_LEFT)
-
       {
-
-        rotation -= rotationSpeed * ticktime/1000;
-
+        rotation -= rotationSpeed * ticks/1000;
       }
-
       else if (currentAction == ACTION_RIGHT)
-
       {
-
-        rotation += rotationSpeed * ticktime/1000;
-
+        rotation += rotationSpeed * ticks/1000;
+      }
+      
+      // Wrap around screen
+      if (this.x < -15)
+        this.x += 830;
+      if (this.x > 815)
+        this.x -= 830;
+      if (this.y < -15)
+        this.y += 630;
+      if (this.y > 615)
+        this.y -= 630;
+      
+      // Decrement remaining reload time
+      if (reloadTime >= 0)
+      {
+        reloadTime -= ticks
       }
     }
   }
