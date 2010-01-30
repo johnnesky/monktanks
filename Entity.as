@@ -9,13 +9,9 @@ package{
     public function Entity(x: Number, y: Number){
       this.x = x;
       this.y = y;
-      graphics.beginFill(0xffff00);
-      graphics.drawRect(-15, -15, 30, 30);
-      graphics.endFill();
     }
     
     public function update(): void {
-      this.y += 1;
     }
   }
 }
