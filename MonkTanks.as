@@ -15,8 +15,8 @@ package{
     public static const P1_FIRE_KEY: int   = 70;
     public static const P1_CLONE_KEY: int   = 71;
     public static const P2_FORWARD_KEY: int = 38;
-    public static const P2_BACK_KEY: int    = 37;
-    public static const P2_LEFT_KEY: int    = 40;
+    public static const P2_BACK_KEY: int    = 40;
+    public static const P2_LEFT_KEY: int    = 37;
     public static const P2_RIGHT_KEY: int   = 39;
     public static const P2_FIRE_KEY: int   = 188;
     public static const P2_CLONE_KEY: int   = 190;
@@ -32,21 +32,15 @@ package{
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
       stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
       
-
-      tank1 = new Tank(100, 400)
-
-      tank2 = new Tank(700, 400) 
-
-        
-
-      entities.push(tank1);
-
-      addChild(tank1);
-
-      entities.push(tank2);
-
-      addChild(tank2);
-
+      tank1 = new Tank(100, 400, this)
+      tank2 = new Tank(700, 400, this) 
+      addEntity(tank1)
+      addEntity(tank2)
+    }
+    
+    public function addEntity(entity: Entity): void {
+      entities.push(entity);
+      addChild(entity);
     }
     
     private function update(event: Event): void {
