@@ -12,12 +12,16 @@ package{
     [Embed(source="backgroundGrid.png")]
     private static var gridClass: Class;
     
-    [Embed(source="Building1.swf")]
+    [Embed(source="Building1.swf", symbol="Building1")]
     private static var building1Class: Class;
+    
+    [Embed(source="Building2.swf", symbol="Building2")]
+    private static var building2Class: Class;
     
     private static var spriteList: Object = {
       canopy: canopyClass,
       building1: building1Class,
+      building2: building2Class,
       grid: gridClass
     }
     
@@ -32,8 +36,8 @@ package{
         </actionLayer>
         <layer>
         <!-- Central Boxes -->
-         <sprite x="400" y="300" rotation="0" type="water"/>
-         <sprite x="400" y="0" rotation="0" type="building1"/>
+         <sprite x="400" y="300" rotation="0" type="building1"/>
+         <sprite x="400" y="400" rotation="0" type="building2"/>
          <sprite x="400" y="600" rotation="0" type="canopy"/>
         <!-- Left Walls -->
          <sprite x="200" y="200" rotation="0" type="canopy"/>
