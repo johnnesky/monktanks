@@ -6,8 +6,10 @@ package{
   import flash.utils.*;
   
   public class Tank extends Entity {
-
-
+    
+		[Embed(source="Tank1.png")]
+		private static var tankImage: Class;
+    
     public static const ACTION_NONE:    int = 0;
     public static const ACTION_FORWARD: int = 1;
     public static const ACTION_BACK:    int = 2;
@@ -31,10 +33,12 @@ package{
 
       mainInstance = inst;
 
-        
-      graphics.beginFill(0xffff00);
-      graphics.drawRect(-15, -15, 30, 30);
-      graphics.endFill();
+      var bitmap: Bitmap = new tankImage();
+      bitmap.width = 50;
+      bitmap.height = 50;
+      bitmap.x = -bitmap.width / 2 + 5;
+      bitmap.y = -bitmap.height / 2;
+      addChild(bitmap);
     }
 
     public function keydown(action: int, pressed: Boolean): void {
