@@ -6,6 +6,22 @@ package{
   import flash.utils.*;
   
   public class PlayState extends GameState {
+    private var levelXML: XML = 
+      <level>
+        <layer>
+          <sprite x="300" y="200" rotation="0"  type="water"/>
+          <sprite x="400" y="200" rotation="90" type="wall"/>
+        </layer>
+        <actionLayer>
+          <tank x="100" y="300" rotation="0"  type="skunk" player="1"/>
+          <tank x="700" y="300" rotation="90" type="punk"  player="2"/>
+        </actionLayer>
+        <layer>
+          <sprite x="200" y="500" rotation="0"  type="canopy"/>
+          <sprite x="500" y="100" rotation="90" type="cloud"/>
+        </layer>
+      </level>
+    
     public static const P1_FORWARD_KEY: int = 87;
     public static const P1_BACK_KEY: int    = 83;
     public static const P1_LEFT_KEY: int    = 65;
@@ -19,6 +35,7 @@ package{
     public static const P2_FIRE_KEY: int    = 188;
     public static const P2_CLONE_KEY: int   = 190;
     
+    private var actionLayer: Sprite;
     private var entities: Array = [];
     private var tank1 : Tank;
     private var tank2 : Tank;
@@ -27,10 +44,41 @@ package{
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
       stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
       
-      tank1 = new Tank(100, 400, this);
-      addEntity(tank1);
-      tank2 = new Tank(700, 400, this);
-      addEntity(tank2);
+      for each (var layerXML: XML in levelXML.children()) {
+        switch (String(layerXML.localName())) {
+          case "layer": 
+            var layerSprite: Sprite = new Sprite();
+            addChild(layerSprite);
+            
+            for each (var spriteXML: XML in layerXML.sprite) {
+              var sprite: Sprite = new Sprite();
+              layerSprite.addChild(sprite);
+              sprite.rotation = spriteXML.@rotation;
+              sprite.graphics.beginFill(0x0000ff);
+              sprite.graphics.drawCircle(0, 0, 20);
+              sprite.graphics.endFill();
+              sprite.x = spriteXML.@x;
+              sprite.y = spriteXML.@y;
+            }
+            
+            break;
+          case "actionLayer": 
+            actionLayer = new Sprite();
+            addChild(actionLayer);
+            
+            for each (var tankXML: XML in layerXML.tank) {
+              var tank: Tank = new Tank(tankXML.@x, tankXML.@y, this);
+              addEntity(tank);
+              if (tankXML.@player == "1") {
+                tank1 = tank;
+              } else {
+                tank2 = tank;
+              }
+            }
+            
+            break;
+        }
+      }
     }
     
     public function addEntity(entity: Entity): void {
