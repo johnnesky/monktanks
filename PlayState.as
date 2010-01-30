@@ -6,6 +6,13 @@ package{
   import flash.utils.*;
   
   public class PlayState extends GameState {
+    [Embed(source="Tank1.png")]
+    private static var canopyClass: Class;
+    
+    private static var spriteList: Object = {
+      canopy: canopyClass
+    }
+    
     public static var levelXML: XML = 
       <level>
         <layer>
@@ -26,13 +33,13 @@ package{
     public static const P1_BACK_KEY: int    = 83;
     public static const P1_LEFT_KEY: int    = 65;
     public static const P1_RIGHT_KEY: int   = 68;
-    public static const P1_FIRE_KEY: int    = 70;
-    public static const P1_CLONE_KEY: int   = 71;
+    public static const P1_FIRE_KEY: int    = 88;
+    public static const P1_CLONE_KEY: int   = 67;
     public static const P2_FORWARD_KEY: int = 38;
     public static const P2_BACK_KEY: int    = 40;
     public static const P2_LEFT_KEY: int    = 37;
     public static const P2_RIGHT_KEY: int   = 39;
-    public static const P2_FIRE_KEY: int    = 188;
+    public static const P2_FIRE_KEY: int    = 191;
     public static const P2_CLONE_KEY: int   = 190;
     
     private var actionLayer: Sprite;
@@ -55,14 +62,25 @@ package{
             addChild(layerSprite);
             
             for each (var spriteXML: XML in layerXML.sprite) {
-              var sprite: Sprite = new Sprite();
-              layerSprite.addChild(sprite);
-              sprite.rotation = spriteXML.@rotation;
-              sprite.graphics.beginFill(0x0000ff);
-              sprite.graphics.drawCircle(0, 0, 20);
-              sprite.graphics.endFill();
-              sprite.x = spriteXML.@x;
-              sprite.y = spriteXML.@y;
+              var spriteClass: Class = spriteList[String(spriteXML.@type)];
+              if (spriteClass == null) {
+                var tempSprite: Sprite = new Sprite();
+                layerSprite.addChild(tempSprite);
+                tempSprite.rotation = spriteXML.@rotation;
+                tempSprite.graphics.beginFill(0x0000ff);
+                tempSprite.graphics.drawCircle(0, 0, 20);
+                tempSprite.graphics.endFill();
+                tempSprite.x = spriteXML.@x;
+                tempSprite.y = spriteXML.@y;
+              } else {
+                var sprite: DisplayObject = new spriteClass();
+                layerSprite.addChild(sprite);
+                sprite.rotation = spriteXML.@rotation;
+                sprite.x = spriteXML.@x;
+                sprite.y = spriteXML.@y;
+                sprite.x -= sprite.width/2;
+                sprite.y -= sprite.height/2;
+              }
             }
             
             break;
@@ -72,6 +90,7 @@ package{
             
             for each (var tankXML: XML in layerXML.tank) {
               var tank: Tank = new Tank(tankXML.@x, tankXML.@y, this);
+              tank.rotation = tankXML.@rotation;
               addEntity(tank);
               if (tankXML.@player == "1") {
                 tank1 = tank;

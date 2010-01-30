@@ -6,8 +6,9 @@ package{
   import flash.utils.*;
   
   public class Tank extends Entity {
-    [Embed(source="Tank1.png")]
-    private static var tankImage: Class;
+    [Embed(source='CartoonTank.swf',
+           symbol='Tank1')]
+    private static const _tankSpriteClass: Class;
     
     public static const ACTION_NONE:    int = 0;
     public static const ACTION_FORWARD: int = 1;
@@ -32,12 +33,7 @@ package{
     public function Tank(x: Number, y: Number, inst: PlayState){
       super(x,y);
       mainInstance = inst;
-      var bitmap: Bitmap = new tankImage();
-      bitmap.width = 50;
-      bitmap.height = 50;
-      bitmap.x = -bitmap.width / 2 + 5;
-      bitmap.y = -bitmap.height / 2;
-      addChild(bitmap);
+      addChild(new _tankSpriteClass());
     }
 
     public function keydown(action: int, pressed: Boolean): void {
