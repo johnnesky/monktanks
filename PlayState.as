@@ -83,11 +83,11 @@ package{
     
     public function addEntity(entity: Entity): void {
       entities.push(entity);
-      addChild(entity);
+      actionLayer.addChild(entity);
     }
     
     public function removeEntity(entity: Entity): void {
-      removeChild(entity);
+      actionLayer.removeChild(entity);
       var i : int = entities.indexOf(entity, 0);
       entities.splice(i, 1);
     }
