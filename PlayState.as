@@ -6,26 +6,43 @@ package{
   import flash.utils.*;
   
   public class PlayState extends GameState {
-    [Embed(source="Tank1.png")]
+    [Embed(source="canopy.png")]
     private static var canopyClass: Class;
     
+    [Embed(source="backgroundGrid.png")]
+    private static var gridClass: Class;
+    
+    [Embed(source="Building1.swf")]
+    private static var building1Class: Class;
+    
     private static var spriteList: Object = {
-      canopy: canopyClass
+      canopy: canopyClass,
+      building1: building1Class,
+      grid: gridClass
     }
     
     public static var levelXML: XML = 
       <level>
         <layer>
-          <sprite x="300" y="200" rotation="0"  type="water"/>
-          <sprite x="400" y="200" rotation="90" type="wall"/>
+         <sprite x="400" y="300" rotation="0" type="grid"/>
         </layer>
         <actionLayer>
-          <tank x="100" y="300" rotation="0"  type="skunk" player="1"/>
-          <tank x="700" y="300" rotation="90" type="punk"  player="2"/>
+         <tank x="200" y="300" rotation="90" type="skunk" player="1"/>
+         <tank x="600" y="300" rotation="-90" type="punk" player="2"/>
         </actionLayer>
         <layer>
-          <sprite x="200" y="500" rotation="0"  type="canopy"/>
-          <sprite x="500" y="100" rotation="90" type="cloud"/>
+        <!-- Central Boxes -->
+         <sprite x="400" y="300" rotation="0" type="water"/>
+         <sprite x="400" y="0" rotation="0" type="building1"/>
+         <sprite x="400" y="600" rotation="0" type="canopy"/>
+        <!-- Left Walls -->
+         <sprite x="200" y="200" rotation="0" type="canopy"/>
+         <sprite x="200" y="400" rotation="0" type="canopy"/>
+         <sprite x="0" y="300" rotation="0" type="canopy"/>
+        <!-- Right Walls -->
+         <sprite x="600" y="200" rotation="0" type="canopy"/>
+         <sprite x="600" y="400" rotation="0" type="canopy"/>
+         <sprite x="800" y="300" rotation="0" type="canopy"/>
         </layer>
       </level>
     
@@ -53,8 +70,6 @@ package{
       
 			var ns: Namespace = levelXML.namespace("");
 			
-			trace("parsing", levelXML.toXMLString());
-			
       for each (var layerXML: XML in levelXML.children()) {
         switch (String(layerXML.localName())) {
           case "layer": 
@@ -62,6 +77,12 @@ package{
             addChild(layerSprite);
             
             for each (var spriteXML: XML in layerXML.sprite) {
+              //trace(spriteXML.@type, spriteXML.toXMLString());
+              
+              for each (var xml: XML in spriteXML.attributes()) {
+                trace(xml.name());
+              }
+              
               var spriteClass: Class = spriteList[String(spriteXML.@type)];
               if (spriteClass == null) {
                 var tempSprite: Sprite = new Sprite();
@@ -78,8 +99,10 @@ package{
                 sprite.rotation = spriteXML.@rotation;
                 sprite.x = spriteXML.@x;
                 sprite.y = spriteXML.@y;
-                sprite.x -= sprite.width/2;
-                sprite.y -= sprite.height/2;
+                if (sprite is Bitmap) {
+                  sprite.x -= sprite.width/2;
+                  sprite.y -= sprite.height/2;
+                }
               }
             }
             
