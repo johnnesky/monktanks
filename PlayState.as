@@ -39,8 +39,11 @@ package {
     [Embed(source="backgroundGrid.png")]
     private static var gridClass: Class;
     
-    [Embed(source="Background3.png")]
+    [Embed(source="Background.png")]
     private static var background1Class: Class;
+    
+    [Embed(source="Background3.png")]
+    private static var background2Class: Class;
     
     private static var spriteList: Object = {
       canopy: canopyClass,
@@ -51,7 +54,8 @@ package {
       building1: building1Class,
       building2: building2Class,
       grid: gridClass,
-      background1: background1Class
+      background1: background1Class,
+      background2: background2Class
     }
     
     private static var boundingBoxList: Object = {
@@ -74,7 +78,8 @@ package {
         <layer>
       <!-- Power Ups -->
           <sprite x="250" y="300" rotation="45" type="powerup" scale=".5"/>
-      <!-- Central Boxes -->  <sprite x="400" y="300" rotation="45" type="building2"/>
+      <!-- Central Boxes -->
+          <sprite x="400" y="300" rotation="45" type="building2"/>
           <sprite x="400" y="000" rotation="0" type="canopy" scale="1.25"/>
           <sprite x="400" y="600" rotation="0" type="canopy" scale="1.25"/>
       <!-- Left Walls -->
@@ -306,6 +311,10 @@ package {
         blimp.y = 600 + Math.random() * 200;
       }
       
+      if (Math.random() > 0.997) {
+        addEntity(new Powerup(Math.random() * 800, Math.random() * 600, Math.random() * 3, this));
+      }
+      
       physWorld.Step(ticks, 10, 10);
       
       var contact: b2Contact = physWorld.GetContactList();
@@ -329,16 +338,26 @@ package {
           bullet = contact.GetFixtureB().GetBody().GetUserData();
         }
         
+        var powerup: Powerup = null;
+        if (contact.GetFixtureA().GetBody().GetUserData() is Powerup) {
+          powerup = contact.GetFixtureA().GetBody().GetUserData();
+        } else if (contact.GetFixtureB().GetBody().GetUserData() is Powerup) {
+          powerup = contact.GetFixtureB().GetBody().GetUserData();
+        }
+        
         if (bullet != null && tank != null) {
           if (bullet.shooter != tank) {
             bullet.kill();
-            tank.hit();
+            tank.hit(bullet.powerful ? 3 : 1);
             if (tank.markedAsDead) {
               matchEnded = true;
             }
           }
         } else if (bullet != null) {
           bullet.kill();
+        } else if (powerup != null && tank != null) {
+          tank.powerupType = powerup.type;
+          powerup.kill();
         }
         
         contact = contact.GetNext();

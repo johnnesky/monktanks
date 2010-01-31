@@ -9,49 +9,56 @@ package{
   import Box2D.Collision.*;
   import Box2D.Collision.Shapes.*;
   import Box2D.Common.Math.*;
-  public class Bullet extends Entity {
+  public class Powerup extends Entity {
+    /*
     [Embed(source='Bullet3.swf',
            symbol='Bullet3')]
     private static const _bulletSpriteClass: Class;
+    */
     
-    [Embed(source='Bullet6.swf',
-           symbol='Bullet6')]
-    private static const _bullet2SpriteClass: Class;
+    public static const TYPE_SPEED: int = 0;
+    public static const TYPE_CROWD: int = 1;
+    public static const TYPE_POWER: int = 2;
     
-    public var speed    : Number = 0.01
-    public var distance : Number = 0.0
-    public var maxDist  : Number = 550.0
-    public var timeLeft : int    = 3500
+    public var type: int;
     private var mainInstance : PlayState
-    public var shooter      : Tank
     private var bodyDef      : b2BodyDef
     private var body         : b2Body
     private var markedAsDead : Boolean = false;
-    public var powerful: Boolean;
     
-    public function Bullet(inst: PlayState, powerful: Boolean, shotBy: Tank){
+    public function Powerup(x: Number, y: Number, type: int, inst: PlayState){
       super(x,y);
-      //rotation = rot;
       mainInstance = inst;
-      shooter = shotBy;
-      this.powerful = powerful;
+      this.type = type;
       
-      if (powerful) {
-        addChild(new _bullet2SpriteClass());
-        speed *= 2;
-      } else {
-        addChild(new _bulletSpriteClass());
+      graphics.beginFill(0x000000);
+      graphics.drawRect(-20, -20, 40, 40);
+      graphics.endFill();
+      switch(type) {
+        case TYPE_SPEED:
+          graphics.beginFill(0x00ff77);
+          break;
+        case TYPE_CROWD:
+          graphics.beginFill(0xffff00);
+          break;
+        case TYPE_POWER:
+          graphics.beginFill(0xff0000);
+          break;
       }
+      graphics.drawRect(-18, -18, 36, 36);
+      graphics.endFill();
+      
+      
+      //addChild(new _bulletSpriteClass());
       
       var circleShape:b2CircleShape;
       
       // Init the physics body
-      var dir : b2Vec2 = new b2Vec2(Math.cos(shotBy.rotation*Math.PI/180), Math.sin(shotBy.rotation*Math.PI/180))
       bodyDef = new b2BodyDef();
-      bodyDef.position.x = (shotBy.x + dir.x*15.0)/20.0;
-      bodyDef.position.y = (shotBy.y + dir.y*15.0)/20.0;
+      bodyDef.position.x = x/20.0;
+      bodyDef.position.y = y/20.0;
       bodyDef.fixedRotation = true;
-      circleShape = new b2CircleShape(5.0/20.0);
+      circleShape = new b2CircleShape(20.0/20.0);
       var fixtureDef:b2FixtureDef = new b2FixtureDef();
       fixtureDef.shape = circleShape;
       fixtureDef.density = 1.0;
@@ -62,34 +69,25 @@ package{
       body.SetType(b2Body.b2_dynamicBody);
       body.CreateFixture(fixtureDef);
       body.ResetMassData();
-      body.SetAngle(shotBy.rotation);
-      body.SetLinearVelocity(new b2Vec2(dir.x*speed, dir.y*speed))
       
       // Set up what this will collide with
       var fixture:b2Fixture = body.GetFixtureList();
       while (fixture)
       {
         var filterData : b2FilterData = new b2FilterData;
-        filterData.categoryBits = BIT_BULLET
-        filterData.maskBits     = BIT_TANK | BIT_HOLOGRAM | BIT_BULLET | BIT_ENVIRO
+        filterData.categoryBits = BIT_ENVIRO;
+        filterData.maskBits     = BIT_TANK | BIT_HOLOGRAM | BIT_ENVIRO;
         fixture.SetFilterData(filterData);
         fixture = fixture.GetNext();
-      }
-      
-      if (Math.random() > 0.5) {
-        new SoundEffectManager.shot1().play();
-      } else {
-        new SoundEffectManager.shot2().play();
       }
     }
     
     override public function update(ticks: int): void {
-      timeLeft -= ticks;
-      if (timeLeft <= 0 || markedAsDead)
+      if (markedAsDead)
       {
         mainInstance.removeEntity(this);
         mainInstance.physWorld.DestroyBody(body);
-        mainInstance.addEntity(new Impact(x, y, mainInstance));
+        new SoundEffectManager.powerup().play();
       }
     }
     

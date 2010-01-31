@@ -46,15 +46,16 @@ package{
     public var reloadTime    : int = 0     // ms until recharge is complete
     public var reloadMax     : int = 3500  // ms required for total recharge
     private var mainInstance : PlayState
-    public var health        : int = 2;
-    public var maxHealth     : int = 2;
+    public var health        : int = 3;
+    public var maxHealth     : int = 3;
     private var bodyDef      : b2BodyDef
     private var body         : b2Body
     public var parentTank    : Tank;   // Only set for hologram tanks
-    public var childTank     : Tank;   // Only set if this tank has a hologram
+    public var childTanks    : Array = [];
     public var aiTaskDuration: int = 1000;
     public var markedAsDead : Boolean = false;
     public var type: int;
+    public var powerupType: int = -1;
     
     public function Tank(x: Number, y: Number, angle: Number, type: int, inst: PlayState, bHologram: Boolean){
       super(x,y);
@@ -81,6 +82,7 @@ package{
       bodyDef.position.x = x/20.0;
       bodyDef.position.y = y/20.0;
       bodyDef.angle = angle;
+      bodyDef.fixedRotation = true;
       boxShape = new b2PolygonShape();
       boxShape.SetAsBox(15.0/20.0,15.0/20.0);
       var fixtureDef:b2FixtureDef = new b2FixtureDef();
@@ -106,13 +108,13 @@ package{
         var filterData : b2FilterData = new b2FilterData;
         if (bHologram)
         {
-          filterData.categoryBits = BIT_TANK
-          filterData.maskBits     = BIT_TANK | BIT_BULLET | BIT_ENVIRO
+          filterData.categoryBits = BIT_HOLOGRAM
+          filterData.maskBits     = BIT_HOLOGRAM | BIT_BULLET | BIT_ENVIRO
         }
         else
         {
-          filterData.categoryBits = BIT_HOLOGRAM
-          filterData.maskBits     = BIT_HOLOGRAM | BIT_BULLET | BIT_ENVIRO
+          filterData.categoryBits = BIT_TANK
+          filterData.maskBits     = BIT_TANK | BIT_BULLET | BIT_ENVIRO
         }
         fixture.SetFilterData(filterData);
         fixture = fixture.GetNext();
@@ -131,16 +133,18 @@ package{
         bKeyRight = pressed
       else if (action == ACTION_FIRE && pressed && reloadTime <= 0)
       {
-        var bullet : Bullet = new Bullet(mainInstance, this);
+        var bullet : Bullet = new Bullet(mainInstance, powerupType == Powerup.TYPE_POWER, this);
         mainInstance.addEntity(bullet)
         reloadTime = reloadMax
       }
       else if (action == ACTION_CLONE && pressed)
       {
         // If this tank alraedy had a hologram, delete it
-        if (childTank != null)
+        var maxChildren: int = powerupType == Powerup.TYPE_CROWD ? 4 : 1;
+        while (childTanks.length >= maxChildren)
         {
-          mainInstance.removeEntity(childTank)
+          childTanks[0].disappear();
+          childTanks.splice(0,1);
         }
         
         // Spawn a new holoTank
@@ -148,7 +152,7 @@ package{
         holoTank.rotation = rotation
         holoTank.parentTank = this
         //holoTank.setCollisionFilter(true)
-        childTank = holoTank
+        childTanks.push(holoTank);
         holoTank.nextAiTask()
         mainInstance.addEntity(holoTank)
       }
@@ -165,9 +169,14 @@ package{
         currentAction = ACTION_NONE
     }
     
-    public function hit(): void {
-      health--;
+    public function hit(damage: int): void {
+      health -= damage;
       if (health <= 0) markedAsDead = true;
+    }
+    
+    public function disappear(): void {
+      mainInstance.removeEntity(this);
+      mainInstance.physWorld.DestroyBody(body);
     }
     
     public function nextAiTask() : void {
@@ -215,27 +224,31 @@ package{
         }
       }
       
+      var scaledSpeed: Number = speed * (powerupType == Powerup.TYPE_SPEED ? 2.0 : 1.0);
+      var turnSpeed: Number = 60 * (powerupType == Powerup.TYPE_SPEED ? 2.0 : 1.0);
+      
+      
       if (currentAction == ACTION_FORWARD)
       {
-        vec = new b2Vec2(speed * Math.cos(rotation*Math.PI/180), speed * Math.sin(rotation*Math.PI/180))
+        vec = new b2Vec2(scaledSpeed * Math.cos(rotation*Math.PI/180), scaledSpeed * Math.sin(rotation*Math.PI/180))
         body.SetLinearVelocity(vec)
       }
       else if (currentAction == ACTION_BACK)
       {
-        vec = new b2Vec2(-speed * Math.cos(rotation*Math.PI/180), -speed * Math.sin(rotation*Math.PI/180))
+        vec = new b2Vec2(-scaledSpeed * Math.cos(rotation*Math.PI/180), -scaledSpeed * Math.sin(rotation*Math.PI/180))
         body.SetLinearVelocity(vec)
       }
       else if (currentAction == ACTION_LEFT)
       {
         vec = new b2Vec2(0,0);
         body.SetLinearVelocity(vec)
-        body.SetAngle(body.GetAngle()-60.0*ticks/1000.0);
+        body.SetAngle(body.GetAngle()-turnSpeed*ticks/1000.0);
       }
       else if (currentAction == ACTION_RIGHT)
       {
         vec = new b2Vec2(0,0);
         body.SetLinearVelocity(vec)
-        body.SetAngle(body.GetAngle()+60.0*ticks/1000.0);
+        body.SetAngle(body.GetAngle()+turnSpeed*ticks/1000.0);
       }
       else
       {

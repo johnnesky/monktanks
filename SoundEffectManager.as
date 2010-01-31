@@ -18,6 +18,8 @@ package{
     public static var impact2:Class;
     [Embed('sfx/impact3.mp3')]
     public static var impact3:Class;
+    [Embed('sfx/powerup.mp3')]
+    public static var powerup:Class;
     [Embed('sfx/victory.mp3')]
     public static var victory:Class;
   }
