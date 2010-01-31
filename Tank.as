@@ -34,14 +34,15 @@ package{
     private var reloadTime   : int = 0     // ms until recharge is complete
     private var reloadMax    : int = 3500  // ms required for total recharge
     private var mainInstance : PlayState
-    private var health       : int = 100;
+    private var health       : int = 2;
     private var bodyDef      : b2BodyDef
     private var body         : b2Body
     public var parentTank    : Tank;   // Only set for hologram tanks
     public var childTank     : Tank;   // Only set if this tank has a hologram
     public var aiTaskDuration: int = 1000;
+    public var markedAsDead : Boolean = false;
     
-    public function Tank(x: Number, y: Number, inst: PlayState, bHologram: Boolean){
+    public function Tank(x: Number, y: Number, angle: Number, inst: PlayState, bHologram: Boolean){
       super(x,y);
       mainInstance = inst;
       addChild(new _tankSpriteClass());
@@ -53,6 +54,7 @@ package{
       bodyDef = new b2BodyDef();
       bodyDef.position.x = x/20.0;
       bodyDef.position.y = y/20.0;
+      bodyDef.angle = angle;
       boxShape = new b2PolygonShape();
       boxShape.SetAsBox(15.0/20.0,15.0/20.0);
       var fixtureDef:b2FixtureDef = new b2FixtureDef();
@@ -92,6 +94,7 @@ package{
     }
     
     public function keydown(action: int, pressed: Boolean): void {
+      if (markedAsDead) return;
       if (action == ACTION_FORWARD)
         bKeyForward = pressed
       else if (action == ACTION_BACK)
@@ -115,7 +118,7 @@ package{
         }
         
         // Spawn a new holoTank
-        var holoTank : Tank = new Tank(x, y, mainInstance, true)
+        var holoTank : Tank = new Tank(x, y, body.GetAngle(), mainInstance, true)
         holoTank.rotation = rotation
         holoTank.parentTank = this
         //holoTank.setCollisionFilter(true)
@@ -137,7 +140,8 @@ package{
     }
     
     public function hit(): void {
-      health = 0;
+      health--;
+      if (health <= 0) markedAsDead = true;
     }
     
     public function nextAiTask() : void {
@@ -166,6 +170,12 @@ package{
     }
     
     override public function update(ticks: int): void {
+      if (markedAsDead) {
+        mainInstance.removeEntity(this);
+        mainInstance.physWorld.DestroyBody(body);
+        return;
+      }
+      
       var vec : b2Vec2;
       
       // Tick automated actions for AI

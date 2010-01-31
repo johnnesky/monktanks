@@ -9,7 +9,6 @@ package{
   import Box2D.Collision.*;
   import Box2D.Collision.Shapes.*;
   import Box2D.Common.Math.*;
-    
   public class Bullet extends Entity {
     [Embed(source='Bullet3.swf',
            symbol='Bullet3')]
@@ -20,9 +19,10 @@ package{
     public var maxDist  : Number = 550.0
     public var timeLeft : int    = 3500
     private var mainInstance : PlayState
-    private var shooter      : Tank
+    public var shooter      : Tank
     private var bodyDef      : b2BodyDef
     private var body         : b2Body
+    private var markedAsDead : Boolean = false;
     
     public function Bullet(inst: PlayState, shotBy: Tank){
       super(x,y);
@@ -66,11 +66,15 @@ package{
     
     override public function update(ticks: int): void {
       timeLeft -= ticks;
-      if (timeLeft <= 0)
+      if (timeLeft <= 0 || markedAsDead)
       {
         mainInstance.removeEntity(this);
         mainInstance.physWorld.DestroyBody(body);
       }
+    }
+    
+    public function kill(): void {
+      markedAsDead = true;
     }
   }
 }
