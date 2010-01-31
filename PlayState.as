@@ -35,8 +35,8 @@ package{
     }
     
     private static var boundingBoxList: Object = {
-      building1: {width: 170, height: 100},
-      building2: {width: 110, height: 110}
+      building1: {width: 180, height: 110},
+      building2: {width: 120, height: 120}
     }
     
     public static var levelXML: XML = 
@@ -50,8 +50,8 @@ package{
         </actionLayer>
         <layer>
       <!-- Central Boxes -->
-          <sprite x="400" y="300" rotation="0" type="building1"/>
-          <sprite x="400" y="400" rotation="0" type="building2"/>
+          <sprite x="400" y="300" rotation="0" type="wall1"/>
+          <sprite x="400" y="400" rotation="0" type="wall2"/>
           <sprite x="400" y="600" rotation="0" type="canopy"/>
       <!-- Left Walls -->
           <sprite x="200" y="200" rotation="0" type="clouds"/>
