@@ -12,6 +12,9 @@ package {
   import Box2D.Common.Math.*;
     
   public class PlayState extends GameState {
+    [Embed(source="Blimp.png")]
+    private static var blimpClass: Class;
+    
     [Embed(source="canopy.png")]
     private static var canopyClass: Class;
     
@@ -36,7 +39,7 @@ package {
     [Embed(source="backgroundGrid.png")]
     private static var gridClass: Class;
     
-    [Embed(source="Background.png")]
+    [Embed(source="Background3.png")]
     private static var background1Class: Class;
     
     private static var spriteList: Object = {
@@ -100,6 +103,7 @@ package {
     private var actionLayer: Sprite;
     private var cloudLayer: Sprite;
     private var clouds: Array = [];
+    private var blimp: DisplayObject;
     private var hudLayer: Sprite;
     private var entities: Array = [];
     public var tank1 : Tank;
@@ -235,6 +239,12 @@ package {
         cloudLayer.addChild(cloud);
       }
       
+      blimp = new blimpClass();
+      blimp.scaleX = blimp.scaleY = 0.5;
+      blimp.x = Math.random() * 800 - blimp.width / 2;
+      blimp.y = 600;
+      cloudLayer.addChild(blimp);
+      
       // Initialize health and reload meters
       hudLayer = new Sprite();
       addChild(hudLayer);
@@ -288,6 +298,12 @@ package {
         } else {
           j++;
         }
+      }
+      
+      blimp.y -= 1;
+      if (blimp.y < -blimp.height) {
+        blimp.x = Math.random() * 800 - blimp.width / 2;
+        blimp.y = 600 + Math.random() * 200;
       }
       
       physWorld.Step(ticks, 10, 10);
