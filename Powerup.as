@@ -10,11 +10,14 @@ package{
   import Box2D.Collision.Shapes.*;
   import Box2D.Common.Math.*;
   public class Powerup extends Entity {
-    /*
-    [Embed(source='Bullet3.swf',
-           symbol='Bullet3')]
-    private static const _bulletSpriteClass: Class;
-    */
+    [Embed(source="PowerUp_Speed_1.png")]
+    private static var speedClass: Class;
+    
+    [Embed(source="PowerUp_MultiClone_1.png")]
+    private static var crowdClass: Class;
+    
+    [Embed(source="PowerUp_SuperShot_1.png")]
+    private static var powerClass: Class;
     
     public static const TYPE_SPEED: int = 0;
     public static const TYPE_CROWD: int = 1;
@@ -32,25 +35,21 @@ package{
       mainInstance = inst;
       this.type = type;
       
-      graphics.beginFill(0x000000);
-      graphics.drawRect(-20, -20, 40, 40);
-      graphics.endFill();
+      var sprite: DisplayObject;
       switch(type) {
         case TYPE_SPEED:
-          graphics.beginFill(0x00ff77);
+          sprite = new speedClass();
           break;
         case TYPE_CROWD:
-          graphics.beginFill(0xffff00);
+          sprite = new crowdClass();
           break;
         case TYPE_POWER:
-          graphics.beginFill(0xff0000);
+          sprite = new powerClass();
           break;
       }
-      graphics.drawRect(-18, -18, 36, 36);
-      graphics.endFill();
-      
-      
-      //addChild(new _bulletSpriteClass());
+      addChild(sprite);
+      sprite.x = -sprite.width / 2;
+      sprite.y = -sprite.height / 2;
       
       var circleShape:b2CircleShape;
       
