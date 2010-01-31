@@ -9,8 +9,8 @@ package{
     [Embed(source="canopy.png")]
     private static var canopyClass: Class;
     
-    [Embed(source="backgroundGrid.png")]
-    private static var gridClass: Class;
+    [Embed(source="Clouds.png")]
+    private static var cloudsClass: Class;
     
     [Embed(source="Building1.swf", symbol="Building1")]
     private static var building1Class: Class;
@@ -18,8 +18,12 @@ package{
     [Embed(source="Building2.swf", symbol="Building2")]
     private static var building2Class: Class;
     
+    [Embed(source="backgroundGrid.png")]
+    private static var gridClass: Class;
+    
     private static var spriteList: Object = {
       canopy: canopyClass,
+      clouds: cloudsClass,
       building1: building1Class,
       building2: building2Class,
       grid: gridClass

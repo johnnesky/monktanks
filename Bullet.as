@@ -6,7 +6,10 @@ package{
   import flash.utils.*;
   
   public class Bullet extends Entity {
-      
+    [Embed(source='Bullet3.swf',
+           symbol='Bullet3')]
+    private static const _bulletSpriteClass: Class;
+    
     public var speed    : Number = 160.0
     public var distance : Number = 0.0
     public var maxDist  : Number = 550.0
@@ -16,10 +19,12 @@ package{
       super(x,y);
       rotation = rot;
       mainInstance = inst;
-        
+      addChild(new _bulletSpriteClass());
+      /*
       graphics.beginFill(0x00ff00);
       graphics.drawRect(-5, -5, 10, 10);
       graphics.endFill();
+      */
     }
     
     override public function update(ticks: int): void {
