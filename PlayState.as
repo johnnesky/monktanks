@@ -34,28 +34,33 @@ package{
       grid: gridClass
     }
     
+    private static var boundingBoxList: Object = {
+      building1: {width: 170, height: 100},
+      building2: {width: 110, height: 110}
+    }
+    
     public static var levelXML: XML = 
       <level>
         <layer>
-         <sprite x="400" y="300" rotation="0" type="grid"/>
+          <sprite x="400" y="300" rotation="0" type="grid"/>
         </layer>
         <actionLayer>
-         <tank x="200" y="300" rotation="90" type="skunk" player="1"/>
-         <tank x="600" y="300" rotation="-90" type="punk" player="2"/>
+          <tank x="200" y="300" rotation="90" type="skunk" player="1"/>
+          <tank x="600" y="300" rotation="-90" type="punk" player="2"/>
         </actionLayer>
         <layer>
-        <!-- Central Boxes -->
-         <sprite x="400" y="300" rotation="0" type="building1"/>
-         <sprite x="400" y="400" rotation="0" type="building2"/>
-         <sprite x="400" y="600" rotation="0" type="canopy"/>
-        <!-- Left Walls -->
-         <sprite x="200" y="200" rotation="0" type="canopy"/>
-         <sprite x="200" y="400" rotation="0" type="canopy"/>
-         <sprite x="0" y="300" rotation="0" type="canopy"/>
-        <!-- Right Walls -->
-         <sprite x="600" y="200" rotation="0" type="canopy"/>
-         <sprite x="600" y="400" rotation="0" type="canopy"/>
-         <sprite x="800" y="300" rotation="0" type="canopy"/>
+      <!-- Central Boxes -->
+          <sprite x="400" y="300" rotation="0" type="building1"/>
+          <sprite x="400" y="400" rotation="0" type="building2"/>
+          <sprite x="400" y="600" rotation="0" type="canopy"/>
+      <!-- Left Walls -->
+          <sprite x="200" y="200" rotation="0" type="clouds"/>
+          <sprite x="200" y="400" rotation="0" type="canopy" scale="2.0"/>
+          <sprite x="0" y="300" rotation="0" type="canopy"/>
+      <!-- Right Walls -->
+          <sprite x="600" y="200" rotation="0" type="canopy"/>
+          <sprite x="600" y="400" rotation="0" type="canopy"/>
+          <sprite x="800" y="300" rotation="0" type="canopy" scale="0.5"/>
         </layer>
       </level>
     
@@ -99,12 +104,6 @@ package{
             addChild(layerSprite);
             
             for each (var spriteXML: XML in layerXML.sprite) {
-              //trace(spriteXML.@type, spriteXML.toXMLString());
-              
-              for each (var xml: XML in spriteXML.attributes()) {
-                trace(xml.name());
-              }
-              
               var spriteClass: Class = spriteList[String(spriteXML.@type)];
               if (spriteClass == null) {
                 var tempSprite: Sprite = new Sprite();
@@ -115,16 +114,44 @@ package{
                 tempSprite.graphics.endFill();
                 tempSprite.x = spriteXML.@x;
                 tempSprite.y = spriteXML.@y;
+                if (spriteXML.@scale != undefined) {
+                  tempSprite.scaleX = tempSprite.scaleY = spriteXML.@scale;
+                }
+                sprite = tempSprite;
               } else {
                 var sprite: DisplayObject = new spriteClass();
                 layerSprite.addChild(sprite);
                 sprite.rotation = spriteXML.@rotation;
                 sprite.x = spriteXML.@x;
                 sprite.y = spriteXML.@y;
+                if (spriteXML.@scale != undefined) {
+                  sprite.scaleX = sprite.scaleY = spriteXML.@scale;
+                }
                 if (sprite is Bitmap) {
                   sprite.x -= sprite.width/2;
                   sprite.y -= sprite.height/2;
                 }
+              }
+              
+              var bounds: Object = boundingBoxList[String(spriteXML.@type)];
+              if (bounds != null) {
+                var bodyDef: b2BodyDef;
+                var body: b2Body;
+                var boxShape:b2PolygonShape;
+                bodyDef = new b2BodyDef();
+                bodyDef.position.x = sprite.x/20.0;
+                bodyDef.position.y = sprite.y/20.0;
+                bodyDef.angle = sprite.rotation * Math.PI / 180;
+                boxShape = new b2PolygonShape();
+                boxShape.SetAsBox(bounds.width / 40, bounds.height / 40);
+                var fixtureDef:b2FixtureDef = new b2FixtureDef();
+                fixtureDef.shape = boxShape;
+                fixtureDef.density = 0.0;
+                fixtureDef.friction = 0.3;
+                fixtureDef.restitution = 0.0;
+                body = physWorld.CreateBody(bodyDef);
+                body.SetType(b2Body.b2_staticBody);
+                body.CreateFixture(fixtureDef);
               }
             }
             
