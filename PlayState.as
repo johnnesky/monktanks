@@ -1,4 +1,4 @@
-package{
+package {
   import flash.display.*;
   import flash.events.*;
   import flash.geom.*;
@@ -61,31 +61,28 @@ package{
     
     public static var levelXML: XML = 
       <level>
-       <layer>
-         <sprite x="400" y="300" rotation="0" type="background1"/>
-       </layer>
-       <actionLayer>
-         <tank x="150" y="300" rotation="90" type="skunk" player="1"/>
-         <tank x="650" y="300" rotation="-90" type="punk" player="2"/>
-       </actionLayer>
-       <layer>
+        <layer>
+          <sprite x="400" y="300" rotation="0" type="background1"/>
+        </layer>
+        <actionLayer>
+          <tank x="150" y="300" rotation="90" type="skunk" player="1"/>
+          <tank x="650" y="300" rotation="-90" type="punk" player="2"/>
+        </actionLayer>
+        <layer>
       <!-- Power Ups -->
-         <sprite x="250" y="300" rotation="45" type="powerup" scale=".5"/>
-      <!-- Central Boxes -->   <sprite x="400" y="300" rotation="45" type="building2"/>
-         <sprite x="400" y="000" rotation="0" type="canopy" scale="1.25"/>
-         <sprite x="400" y="600" rotation="0" type="canopy" scale="1.25"/>
+          <sprite x="250" y="300" rotation="45" type="powerup" scale=".5"/>
+      <!-- Central Boxes -->  <sprite x="400" y="300" rotation="45" type="building2"/>
+          <sprite x="400" y="000" rotation="0" type="canopy" scale="1.25"/>
+          <sprite x="400" y="600" rotation="0" type="canopy" scale="1.25"/>
       <!-- Left Walls -->
-         <sprite x="200" y="400" rotation="0" type="canopy" scale="1.0"/>
-         <sprite x="0" y="300" rotation="90" type="building1"/>
-         <sprite x="200" y="150" rotation="0" type="building1"/>
+          <sprite x="200" y="400" rotation="0" type="canopy" scale="1.0"/>
+          <sprite x="0" y="300" rotation="90" type="building1"/>
+          <sprite x="200" y="150" rotation="0" type="building1"/>
       <!-- Right Walls -->
-         <sprite x="600" y="200" rotation="0" type="canopy"/>
-         <sprite x="800" y="300" rotation="90" type="building1"/>
-         <sprite x="600" y="450" rotation="180" type="building1"/>
-      <!-- Clouds -->
-         <sprite x="300" y="500" rotation="0" type="clouds" scale="1.0"/>
-         <sprite x="500" y="100" rotation="0" type="clouds" scale="1.0"/>
-       </layer>
+          <sprite x="600" y="200" rotation="0" type="canopy"/>
+          <sprite x="800" y="300" rotation="90" type="building1"/>
+          <sprite x="600" y="450" rotation="180" type="building1"/>
+        </layer>
       </level>
     public static const P1_FORWARD_KEY: int = 87;
     public static const P1_BACK_KEY: int    = 83;
@@ -101,6 +98,8 @@ package{
     public static const P2_CLONE_KEY: int   = 190;
     
     private var actionLayer: Sprite;
+    private var cloudLayer: Sprite;
+    private var clouds: Array = [];
     private var hudLayer: Sprite;
     private var entities: Array = [];
     public var tank1 : Tank;
@@ -112,7 +111,7 @@ package{
     public var reload2 : HudBar;
     private var matchEnded: Boolean = false;
     private var ticksUntilEndScreen: int = 1000;
-
+    
     public function PlayState(stage: Stage) {
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
       stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -216,6 +215,17 @@ package{
         }
       }
       
+      cloudLayer = new Sprite();
+      addChild(cloudLayer);
+      
+      for (var i: int = 0; i < 4; i++) {
+        var cloud: DisplayObject = new cloudsClass();
+        cloud.x = Math.random() * 800;
+        cloud.y = Math.random() * 600;
+        clouds.push(cloud);
+        cloudLayer.addChild(cloud);
+      }
+      
       // Initialize health and reload meters
       hudLayer = new Sprite();
       addChild(hudLayer);
@@ -253,6 +263,23 @@ package{
         }
       }
       
+      if (Math.random() > 0.9965) {
+        var cloud: DisplayObject = new cloudsClass();
+        cloud.x = -300;
+        cloud.y = Math.random() * 600;
+        clouds.push(cloud);
+        cloudLayer.addChild(cloud);
+      }
+      
+      for (var j: int = 0; j < clouds.length; ) {
+        clouds[j].x += 0.5;
+        if (clouds[j].x > 800) {
+          cloudLayer.removeChild(clouds[j]);
+          clouds.splice(j, 1);
+        } else {
+          j++;
+        }
+      }
       
       var contact: b2Contact = physWorld.GetContactList();
       while (contact != null) {
@@ -313,24 +340,43 @@ package{
 			}
       
       // Update the health and recharge meters
+
       var meter : Number = 0;
+
       if (tank1 != null)
+
       {
+
         meter = tank1.health/tank1.maxHealth;
+
         health1.val = meter
+
         meter = 1;
+
         if (tank1.reloadTime > 0)
+
           meter = 1.0 - tank1.reloadTime/tank1.reloadMax;
+
         reload1.val = meter
+
       }
+
       if (tank2 != null)
+
       {
+
         meter = tank2.health/tank2.maxHealth;
+
         health2.val = meter
+
         meter = 1;
+
         if (tank2.reloadTime > 0)
+
           meter = 1.0 - tank2.reloadTime/tank2.reloadMax;
+
         reload2.val = meter
+
       }
     }
     
