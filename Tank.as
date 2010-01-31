@@ -37,16 +37,17 @@ package{
     private var health       : int = 100;
     private var bodyDef      : b2BodyDef
     private var body         : b2Body
+    public var parentTank    : Tank;   // Only set for hologram tanks
+    public var childTank     : Tank;   // Only set if this tank has a hologram
+    public var aiTaskDuration: int = 1000;
     
     public function Tank(x: Number, y: Number, inst: PlayState){
       super(x,y);
       mainInstance = inst;
       addChild(new _tankSpriteClass());
 
-    
       // Vars used to create physics bodies
 			var boxShape:b2PolygonShape;
-			//var circleShape:b2CircleShape;
       
       // Init the physics body
       bodyDef = new b2BodyDef();
@@ -83,6 +84,19 @@ package{
       }
       else if (action == ACTION_CLONE && pressed)
       {
+        // If this tank alraedy had a hologram, delete it
+        if (childTank != null)
+        {
+          mainInstance.removeEntity(childTank)
+        }
+        
+        // Spawn a new holoTank
+        var holoTank : Tank = new Tank(x, y, mainInstance)
+        holoTank.rotation = rotation
+        holoTank.parentTank = this
+        childTank = holoTank
+        holoTank.nextAiTask()
+        mainInstance.addEntity(holoTank)
       }
       
       if (bKeyLeft)
@@ -101,39 +115,70 @@ package{
       health = 0;
     }
     
+    public function nextAiTask() : void {
+      // Randomly choose one of 4 AI tasks: left, right, forward or none
+      var taskId : int = Math.random()*4.0
+      if (taskId == 0)
+      {
+        currentAction = ACTION_LEFT
+        aiTaskDuration = Math.random()*800.0
+      }
+      else if (taskId == 1)
+      {
+        currentAction = ACTION_RIGHT
+        aiTaskDuration = Math.random()*800.0
+      }
+      else if (taskId == 2)
+      {
+        currentAction = ACTION_FORWARD
+        aiTaskDuration = Math.random()*2000.0
+      }
+      else
+      {
+        currentAction = ACTION_NONE
+        aiTaskDuration = Math.random()*500.0
+      }
+    }
+    
     override public function update(ticks: int): void {
       var vec : b2Vec2;
+      
+      // Tick automated actions for AI
+      if (parentTank)
+      {
+        aiTaskDuration -= ticks;
+        if (aiTaskDuration <= 0)
+        {
+          nextAiTask();
+        }
+      }
+      
       if (currentAction == ACTION_FORWARD)
       {
         vec = new b2Vec2(speed * Math.cos(rotation*Math.PI/180), speed * Math.sin(rotation*Math.PI/180))
         body.SetLinearVelocity(vec)
-        //body.SetAngularVelocity(0);
       }
       else if (currentAction == ACTION_BACK)
       {
         vec = new b2Vec2(-speed * Math.cos(rotation*Math.PI/180), -speed * Math.sin(rotation*Math.PI/180))
         body.SetLinearVelocity(vec)
-        //body.SetAngularVelocity(0);
       }
       else if (currentAction == ACTION_LEFT)
       {
         vec = new b2Vec2(0,0);
         body.SetLinearVelocity(vec)
-        //body.SetAngularVelocity(-0.50);
         body.SetAngle(body.GetAngle()-60.0*ticks/1000.0);
       }
       else if (currentAction == ACTION_RIGHT)
       {
         vec = new b2Vec2(0,0);
         body.SetLinearVelocity(vec)
-        //body.SetAngularVelocity(0.50);
         body.SetAngle(body.GetAngle()+60.0*ticks/1000.0);
       }
       else
       {
         vec = new b2Vec2(0,0);
         body.SetLinearVelocity(vec)
-        //body.SetAngularVelocity(0)
       }
       
       // Decrement remaining reload time
