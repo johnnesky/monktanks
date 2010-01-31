@@ -7,11 +7,11 @@ package{
   import flash.net.*;
   
   public class EndState extends GameState {
-    [Embed(source="Background.png")]
-    private static var background1Class: Class;
+    [Embed(source="WinScreen_Skunk.png")]
+    private static var WinSkunkClass: Class;
     
-    [Embed(source="Background3.png")]
-    private static var background2Class: Class;
+    [Embed(source="WinScreen_Punk.png")]
+    private static var WinPunkClass: Class;
     
     public static var victor: int = 0;
     
@@ -20,9 +20,9 @@ package{
       stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
       
       if (victor == 0) {
-        addChild(new background1Class());
+        addChild(new WinSkunkClass());
       } else {
-        addChild(new background2Class());
+        addChild(new WinPunkClass());
       }
       
       new SoundEffectManager.victory().play();

@@ -30,7 +30,7 @@ package{
         var thumbnail: DisplayObject;
         thumbnail = new thumbnailList[i]();
         thumbnail.x = 400 - thumbnail.width / 2;
-        thumbnail.y = 200 + 120 * i;
+        thumbnail.y = 240 + 110 * i;
         var container: Sprite = new Sprite();
         container.addChild(thumbnail);
         addChild(container);
