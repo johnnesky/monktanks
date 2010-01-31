@@ -94,6 +94,7 @@ package{
         mainInstance.physWorld.DestroyBody(body);
         new SoundEffectManager.powerup().play();
       }
+      body.SetLinearVelocity(new b2Vec2(0, 0));
     }
     
     public function kill(): void {
