@@ -199,6 +199,7 @@ package{
       if (markedAsDead) {
         mainInstance.removeEntity(this);
         mainInstance.physWorld.DestroyBody(body);
+        mainInstance.addEntity(new Explosion(x, y, mainInstance));
         return;
       }
       
