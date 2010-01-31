@@ -41,8 +41,7 @@ package{
     private var bKeyRight   : Boolean = false;
     
     public var currentAction : int = ACTION_NONE;
-    public var speed         : Number = 0.003;
-    public var rotationSpeed : Number = 120.0;
+    public var speed         : Number = 0.004;
     public var reloadTime    : int = 0     // ms until recharge is complete
     public var reloadMax     : int = 3500  // ms required for total recharge
     private var mainInstance : PlayState
@@ -170,8 +169,19 @@ package{
     }
     
     public function hit(damage: int): void {
-      health -= damage;
+      // Clones can be killed with one hit
+      if (parentTank != null)
+        health = 0;    
+      else
+        health -= damage;
+      
       if (health <= 0) markedAsDead = true;
+    }
+    
+    public function removeClone(clone:Tank): void {
+      var i : int = childTanks.indexOf(clone, 0);
+      if (i >= 0)
+        childTanks.splice(i, 1);
     }
     
     public function disappear(): void {
@@ -206,6 +216,10 @@ package{
     
     override public function update(ticks: int): void {
       if (markedAsDead) {
+        // If this is a clone, remove it from its parent's childTanks list
+        if (parentTank)
+          parentTank.removeClone(this);
+          
         mainInstance.removeEntity(this);
         mainInstance.physWorld.DestroyBody(body);
         mainInstance.addEntity(new Explosion(x, y, mainInstance));
@@ -225,7 +239,7 @@ package{
       }
       
       var scaledSpeed: Number = speed * (powerupType == Powerup.TYPE_SPEED ? 2.0 : 1.0);
-      var turnSpeed: Number = 60 * (powerupType == Powerup.TYPE_SPEED ? 2.0 : 1.0);
+      var turnSpeed: Number = 100 * (powerupType == Powerup.TYPE_SPEED ? 2.0 : 1.0);
       
       
       if (currentAction == ACTION_FORWARD)

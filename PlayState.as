@@ -349,7 +349,7 @@ package {
           if (bullet.shooter != tank) {
             bullet.kill();
             tank.hit(bullet.powerful ? 3 : 1);
-            if (tank.markedAsDead) {
+            if (tank.markedAsDead && tank.parentTank == null) {
               matchEnded = true;
             }
           }
