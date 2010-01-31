@@ -28,7 +28,7 @@ package{
     private function onKeyDown(event: KeyboardEvent): void {
       switch (event.keyCode) {
         case 32:
-          MonkTanks.state = MonkTanks.PLAY_STATE;
+          MonkTanks.state = MonkTanks.START_STATE;
           break;
       }
     }

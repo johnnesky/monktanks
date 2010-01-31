@@ -66,7 +66,7 @@ package {
       building2: {width: 120, height: 120}
     }
     
-    public static var levelXML: XML = 
+    public static var levelXMLs: Array = [
       <level>
         <layer>
           <sprite x="400" y="300" rotation="0" type="background1"/>
@@ -76,9 +76,16 @@ package {
           <tank x="650" y="300" rotation="-90" type="punk" player="2"/>
         </actionLayer>
         <layer>
-      <!-- Power Ups -->
-          <sprite x="250" y="300" rotation="45" type="powerup" scale=".5"/>
-      <!-- Central Boxes -->
+      <!-- Power Ups
+          <sprite x="70" y="150" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="230" y="290" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="575" y="300" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="150" y="40" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="600" y="40" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="485" y="550" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="780" y="495" rotation="0" type="powerup" scale=".5"/>
+      -->
+      <!-- Center -->
           <sprite x="400" y="300" rotation="45" type="building2"/>
           <sprite x="400" y="000" rotation="0" type="canopy" scale="1.25"/>
           <sprite x="400" y="600" rotation="0" type="canopy" scale="1.25"/>
@@ -90,8 +97,73 @@ package {
           <sprite x="600" y="200" rotation="0" type="canopy"/>
           <sprite x="800" y="300" rotation="90" type="building1"/>
           <sprite x="600" y="450" rotation="180" type="building1"/>
+      <!-- Clouds
+          <sprite x="300" y="500" rotation="0" type="clouds" scale="1.0"/>
+          <sprite x="500" y="100" rotation="0" type="clouds" scale="1.0"/>
+      -->
         </layer>
+      </level>,
+      
+      <level>
+        <layer>
+          <sprite x="400" y="300" rotation="0" type="background2"/>
+        </layer>
+        <layer>
+      <!-- Rocks -->
+          <sprite x="225" y="475" rotation="0" type="rocks1" scale="1"/>
+          <sprite x="355" y="570" rotation="60" type="rocks1" scale="1"/>
+          
+          <sprite x="470" y="455" rotation="0" type="rocks1" scale=".9"/>
+          <sprite x="485" y="450" rotation="220" type="rocks1" scale=".9"/>
+      </layer>
+        <actionLayer>
+          <tank x="250" y="250" rotation="90" type="skunk" player="1"/>
+          <tank x="575" y="250" rotation="-90" type="punk" player="2"/>
+        </actionLayer>
+        <layer>
+      <!-- Power Ups
+          <sprite x="150" y="250" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="250" y="150" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="450" y="250" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="550" y="430" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="100" y="575" rotation="0" type="powerup" scale=".5"/>
+          <sprite x="550" y="575" rotation="0" type="powerup" scale=".5"/>
+      -->
+      <!-- Forest -->
+          <sprite x="100" y="500" rotation="0" type="canopy" scale="1"/>
+          <sprite x="225" y="550" rotation="0" type="canopy" scale="1.1"/>
+          <sprite x="350" y="395" rotation="0" type="canopy" scale="1"/>
+          <sprite x="475" y="380" rotation="0" type="canopy" scale=".7"/>
+          <sprite x="475" y="540" rotation="0" type="canopy" scale=".8"/>
+          <sprite x="550" y="500" rotation="0" type="canopy" scale=".8"/>
+          <sprite x="650" y="-30" rotation="0" type="canopy" scale="1.25"/>
+          <sprite x="650" y="570" rotation="0" type="canopy" scale="1.25"/>
+          
+          <sprite x="770" y="500" rotation="0" type="canopy" scale="1.25"/>
+          <sprite x="-30" y="500" rotation="0" type="canopy" scale="1.25"/>
+          
+      <!-- Left -->
+          <sprite x="250" y="195" rotation="90" type="wall1"/>
+          <sprite x="350" y="195" rotation="90" type="wall1"/>
+          <sprite x="200" y="200" rotation="0" type="wall2"/>
+          <sprite x="200" y="300" rotation="0" type="wall2"/>
+          <sprite x="150" y="150" rotation="0" type="building2"/>
+      <!-- Right -->
+          <sprite x="380" y="70" rotation="90" type="wall2"/>
+          <sprite x="480" y="70" rotation="90" type="wall2"/>
+          <sprite x="580" y="70" rotation="90" type="wall2"/>
+          <sprite x="520" y="242" rotation="0" type="wall1"/>
+          <sprite x="600" y="350" rotation="0" type="building1"/>
+        </layer>
+      </level>,
+      
+      <level>
+        <actionLayer>
+          <tank x="250" y="250" rotation="90" type="skunk" player="1"/>
+          <tank x="575" y="250" rotation="-90" type="punk" player="2"/>
+        </actionLayer>
       </level>
+    ];
     public static const P1_FORWARD_KEY: int = 87;
     public static const P1_BACK_KEY: int    = 83;
     public static const P1_LEFT_KEY: int    = 65;
@@ -104,6 +176,8 @@ package {
     public static const P2_RIGHT_KEY: int   = 39;
     public static const P2_FIRE_KEY: int    = 191;
     public static const P2_CLONE_KEY: int   = 190;
+    
+    public static var levelNumber: int = 0;
     
     private var actionLayer: Sprite;
     private var cloudLayer: Sprite;
@@ -132,9 +206,7 @@ package {
 			// Construct a world object
 			physWorld = new b2World( gravity, false);
       
-      var ns: Namespace = levelXML.namespace("");
-			
-      for each (var layerXML: XML in levelXML.children()) {
+      for each (var layerXML: XML in levelXMLs[levelNumber].children()) {
         switch (String(layerXML.localName())) {
           case "layer": 
             var layerSprite: Sprite = new Sprite();
@@ -287,7 +359,7 @@ package {
         }
       }
       
-      if (Math.random() > 0.9965) {
+      if (Math.random() * Math.random() > 0.93) {
         var cloud: DisplayObject = new cloudsClass();
         cloud.x = -300;
         cloud.y = Math.random() * 600;

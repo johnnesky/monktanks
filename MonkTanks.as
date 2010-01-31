@@ -9,8 +9,9 @@ package{
   
   [SWF(width=800, height=600, frameRate=30, backgroundColor=0x004400)]
   public class MonkTanks extends Sprite {
-    public static const PLAY_STATE: int     = 188;
-    public static const END_STATE: int      = 190;
+    public static const START_STATE: int    = 0;
+    public static const PLAY_STATE: int     = 1;
+    public static const END_STATE: int      = 2;
     
     private static var _state: int;
     private static var _gameStateInstance: GameState;
@@ -19,7 +20,7 @@ package{
     
     public function MonkTanks(){
       _instance = this;
-      state = PLAY_STATE;
+      state = START_STATE;
       addEventListener(Event.ENTER_FRAME, update);
       
       // Some cruft to enable pasting text through right click menu:
@@ -43,8 +44,9 @@ package{
         var string: String = clipboard.getData(ClipboardFormats.TEXT_FORMAT) as String;
         var xml: XML = XML(string);
         if (xml != null && xml.toXMLString() != "" && xml.children().length() > 0) {
-          PlayState.levelXML = xml;
-          state = END_STATE;
+          PlayState.levelXMLs[2] = xml;
+          PlayState.levelNumber = 2;
+          state = START_STATE;
           state = PLAY_STATE;
         }
       } catch (error: Error) {}
@@ -63,6 +65,9 @@ package{
       _state = val;
       
       switch(_state) {
+        case START_STATE:
+          _gameStateInstance = new StartState(_instance.stage);
+          break;
         case PLAY_STATE:
           _gameStateInstance = new PlayState(_instance.stage);
           break;
