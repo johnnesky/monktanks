@@ -41,7 +41,7 @@ package{
     public var childTank     : Tank;   // Only set if this tank has a hologram
     public var aiTaskDuration: int = 1000;
     
-    public function Tank(x: Number, y: Number, inst: PlayState){
+    public function Tank(x: Number, y: Number, inst: PlayState, bHologram: Boolean){
       super(x,y);
       mainInstance = inst;
       addChild(new _tankSpriteClass());
@@ -63,10 +63,34 @@ package{
       bodyDef.userData = this;
       body = mainInstance.physWorld.CreateBody(bodyDef);
       body.SetType(b2Body.b2_dynamicBody);
-      body.CreateFixture(fixtureDef);
+      var fixture:b2Fixture = body.CreateFixture(fixtureDef);
       body.ResetMassData();
+      
+      // Set default collision parameters
+      setCollisionFilter(bHologram)
     }
-
+            
+    public function setCollisionFilter(bHologram: Boolean): void{
+      // Set up what this will collide with
+      var fixture:b2Fixture = body.GetFixtureList();
+      while (fixture)
+      {
+        var filterData : b2FilterData = new b2FilterData;
+        if (bHologram)
+        {
+          filterData.categoryBits = BIT_TANK
+          filterData.maskBits     = BIT_TANK | BIT_BULLET | BIT_ENVIRO
+        }
+        else
+        {
+          filterData.categoryBits = BIT_HOLOGRAM
+          filterData.maskBits     = BIT_HOLOGRAM | BIT_BULLET | BIT_ENVIRO
+        }
+        fixture.SetFilterData(filterData);
+        fixture = fixture.GetNext();
+      }
+    }
+    
     public function keydown(action: int, pressed: Boolean): void {
       if (action == ACTION_FORWARD)
         bKeyForward = pressed
@@ -91,9 +115,10 @@ package{
         }
         
         // Spawn a new holoTank
-        var holoTank : Tank = new Tank(x, y, mainInstance)
+        var holoTank : Tank = new Tank(x, y, mainInstance, true)
         holoTank.rotation = rotation
         holoTank.parentTank = this
+        //holoTank.setCollisionFilter(true)
         childTank = holoTank
         holoTank.nextAiTask()
         mainInstance.addEntity(holoTank)

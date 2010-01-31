@@ -51,6 +51,17 @@ package{
       body.ResetMassData();
       body.SetAngle(shotBy.rotation);
       body.SetLinearVelocity(new b2Vec2(dir.x*speed, dir.y*speed))
+      
+      // Set up what this will collide with
+      var fixture:b2Fixture = body.GetFixtureList();
+      while (fixture)
+      {
+        var filterData : b2FilterData = new b2FilterData;
+        filterData.categoryBits = BIT_BULLET
+        filterData.maskBits     = BIT_TANK | BIT_HOLOGRAM | BIT_BULLET | BIT_ENVIRO
+        fixture.SetFilterData(filterData);
+        fixture = fixture.GetNext();
+      }
     }
     
     override public function update(ticks: int): void {

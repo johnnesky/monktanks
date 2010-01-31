@@ -164,6 +164,17 @@ package{
                 body = physWorld.CreateBody(bodyDef);
                 body.SetType(b2Body.b2_staticBody);
                 body.CreateFixture(fixtureDef);
+                  
+                // Set up what this will collide with
+                var fixture:b2Fixture = body.GetFixtureList();
+                while (fixture)
+                {
+                  var filterData : b2FilterData = new b2FilterData;
+                  filterData.categoryBits = Entity.BIT_ENVIRO
+                  filterData.maskBits     = Entity.BIT_TANK | Entity.BIT_HOLOGRAM | Entity.BIT_BULLET | Entity.BIT_ENVIRO
+                  fixture.SetFilterData(filterData);
+                  fixture = fixture.GetNext();
+                }
               }
             }
             
@@ -173,7 +184,7 @@ package{
             addChild(actionLayer);
             
             for each (var tankXML: XML in layerXML.tank) {
-              var tank: Tank = new Tank(tankXML.@x, tankXML.@y, this);
+              var tank: Tank = new Tank(tankXML.@x, tankXML.@y, this, false);
               tank.rotation = tankXML.@rotation;
               addEntity(tank);
               if (tankXML.@player == "1") {
