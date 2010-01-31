@@ -61,31 +61,31 @@ package{
     
     public static var levelXML: XML = 
       <level>
-      Â <layer>
-      Â Â  <sprite x="400" y="300" rotation="0" type="background1"/>
-      Â </layer>
-      Â <actionLayer>
-      Â Â  <tank x="150" y="300" rotation="90" type="skunk" player="1"/>
-      Â Â  <tank x="650" y="300" rotation="-90" type="punk" player="2"/>
-      Â </actionLayer>
-      Â <layer>
+       <layer>
+         <sprite x="400" y="300" rotation="0" type="background1"/>
+       </layer>
+       <actionLayer>
+         <tank x="150" y="300" rotation="90" type="skunk" player="1"/>
+         <tank x="650" y="300" rotation="-90" type="punk" player="2"/>
+       </actionLayer>
+       <layer>
       <!-- Power Ups -->
-      Â Â  <sprite x="250" y="300" rotation="45" type="powerup" scale=".5"/>
-      <!-- Central Boxes --> Â  <sprite x="400" y="300" rotation="45" type="building2"/>
-      Â Â  <sprite x="400" y="000" rotation="0" type="canopy" scale="1.25"/>
-      Â Â  <sprite x="400" y="600" rotation="0" type="canopy" scale="1.25"/>
+         <sprite x="250" y="300" rotation="45" type="powerup" scale=".5"/>
+      <!-- Central Boxes -->   <sprite x="400" y="300" rotation="45" type="building2"/>
+         <sprite x="400" y="000" rotation="0" type="canopy" scale="1.25"/>
+         <sprite x="400" y="600" rotation="0" type="canopy" scale="1.25"/>
       <!-- Left Walls -->
-      Â Â  <sprite x="200" y="400" rotation="0" type="canopy" scale="1.0"/>
-      Â Â  <sprite x="0" y="300" rotation="90" type="building1"/>
-      Â Â  <sprite x="200" y="150" rotation="0" type="building1"/>
+         <sprite x="200" y="400" rotation="0" type="canopy" scale="1.0"/>
+         <sprite x="0" y="300" rotation="90" type="building1"/>
+         <sprite x="200" y="150" rotation="0" type="building1"/>
       <!-- Right Walls -->
-      Â Â  <sprite x="600" y="200" rotation="0" type="canopy"/>
-      Â Â  <sprite x="800" y="300" rotation="90" type="building1"/>
-      Â Â  <sprite x="600" y="450" rotation="180" type="building1"/>
+         <sprite x="600" y="200" rotation="0" type="canopy"/>
+         <sprite x="800" y="300" rotation="90" type="building1"/>
+         <sprite x="600" y="450" rotation="180" type="building1"/>
       <!-- Clouds -->
-      Â Â  <sprite x="300" y="500" rotation="0" type="clouds" scale="1.0"/>
-      Â Â  <sprite x="500" y="100" rotation="0" type="clouds" scale="1.0"/>
-      Â </layer>
+         <sprite x="300" y="500" rotation="0" type="clouds" scale="1.0"/>
+         <sprite x="500" y="100" rotation="0" type="clouds" scale="1.0"/>
+       </layer>
       </level>
     public static const P1_FORWARD_KEY: int = 87;
     public static const P1_BACK_KEY: int    = 83;
@@ -101,13 +101,18 @@ package{
     public static const P2_CLONE_KEY: int   = 190;
     
     private var actionLayer: Sprite;
+    private var hudLayer: Sprite;
     private var entities: Array = [];
     public var tank1 : Tank;
     public var tank2 : Tank;
     public var physWorld : b2World;
+    public var health1 : HudBar;
+    public var health2 : HudBar;
+    public var reload1 : HudBar;
+    public var reload2 : HudBar;
     private var matchEnded: Boolean = false;
     private var ticksUntilEndScreen: int = 1000;
-    
+
     public function PlayState(stage: Stage) {
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
       stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
@@ -210,6 +215,22 @@ package{
             break;
         }
       }
+      
+      // Initialize health and reload meters
+      hudLayer = new Sprite();
+      addChild(hudLayer);
+      health1 = new HudBar(15,  5,  0xa00000, true)
+      reload1 = new HudBar(15,  15, 0x0000a0, true)
+      health2 = new HudBar(242, 5,  0xa00000, false)
+      reload2 = new HudBar(242, 15, 0x0000a0, false)
+      entities.push(health1);
+      hudLayer.addChild(health1);
+      entities.push(health2);
+      hudLayer.addChild(health2);
+      entities.push(reload1);
+      hudLayer.addChild(reload1);
+      entities.push(reload2);
+      hudLayer.addChild(reload2);
     }
     
     public function addEntity(entity: Entity): void {
@@ -290,6 +311,27 @@ package{
 					entity.rotation = bb.GetAngle();
 				}
 			}
+      
+      // Update the health and recharge meters
+      var meter : Number = 0;
+      if (tank1 != null)
+      {
+        meter = tank1.health/tank1.maxHealth;
+        health1.val = meter
+        meter = 1;
+        if (tank1.reloadTime > 0)
+          meter = 1.0 - tank1.reloadTime/tank1.reloadMax;
+        reload1.val = meter
+      }
+      if (tank2 != null)
+      {
+        meter = tank2.health/tank2.maxHealth;
+        health2.val = meter
+        meter = 1;
+        if (tank2.reloadTime > 0)
+          meter = 1.0 - tank2.reloadTime/tank2.reloadMax;
+        reload2.val = meter
+      }
     }
     
     public override function destroy(): void {

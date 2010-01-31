@@ -31,10 +31,11 @@ package{
     public var currentAction : int = ACTION_NONE;
     public var speed         : Number = 0.003;
     public var rotationSpeed : Number = 120.0;
-    private var reloadTime   : int = 0     // ms until recharge is complete
-    private var reloadMax    : int = 3500  // ms required for total recharge
+    public var reloadTime    : int = 0     // ms until recharge is complete
+    public var reloadMax     : int = 3500  // ms required for total recharge
     private var mainInstance : PlayState
-    private var health       : int = 2;
+    public var health        : int = 2;
+    public var maxHealth     : int = 2;
     private var bodyDef      : b2BodyDef
     private var body         : b2Body
     public var parentTank    : Tank;   // Only set for hologram tanks
