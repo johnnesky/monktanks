@@ -110,7 +110,7 @@ package {
     public var reload1 : HudBar;
     public var reload2 : HudBar;
     private var matchEnded: Boolean = false;
-    private var ticksUntilEndScreen: int = 1000;
+    private var ticksUntilEndScreen: int = 2000;
     
     public function PlayState(stage: Stage) {
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);

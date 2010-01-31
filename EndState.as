@@ -13,6 +13,8 @@ package{
       graphics.beginFill(0xff0000);
       graphics.drawRect(100, 100, 200, 100);
       graphics.endFill();
+      
+      new SoundEffectManager.victory().play();
     }
     
     public override function update(ticks: int): void {

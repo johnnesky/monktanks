@@ -16,6 +16,7 @@ package{
       super(x,y);
       mainInstance = inst;
       addChild(new _explosionSpriteClass());
+      new SoundEffectManager.xplosion().play();
     }
     
     override public function update(ticks: int): void {

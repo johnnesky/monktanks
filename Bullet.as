@@ -32,7 +32,6 @@ package{
       addChild(new _bulletSpriteClass());
       
       var circleShape:b2CircleShape;
-      //var boxShape:b2PolygonShape;
       
       // Init the physics body
       var dir : b2Vec2 = new b2Vec2(Math.cos(shotBy.rotation*Math.PI/180), Math.sin(shotBy.rotation*Math.PI/180))
@@ -40,8 +39,6 @@ package{
       bodyDef.position.x = (shotBy.x + dir.x*15.0)/20.0;
       bodyDef.position.y = (shotBy.y + dir.y*15.0)/20.0;
       circleShape = new b2CircleShape(5.0/20.0);
-      //boxShape = new b2PolygonShape();
-      //boxShape.SetAsBox(15.0/20.0,15.0/20.0);  
       var fixtureDef:b2FixtureDef = new b2FixtureDef();
       fixtureDef.shape = circleShape;
       fixtureDef.density = 1.0;
@@ -65,6 +62,12 @@ package{
         fixture.SetFilterData(filterData);
         fixture = fixture.GetNext();
       }
+      
+      if (Math.random() > 0.5) {
+        new SoundEffectManager.shot1().play();
+      } else {
+        new SoundEffectManager.shot2().play();
+      }
     }
     
     override public function update(ticks: int): void {
@@ -73,6 +76,7 @@ package{
       {
         mainInstance.removeEntity(this);
         mainInstance.physWorld.DestroyBody(body);
+        mainInstance.addEntity(new Impact(x, y, mainInstance));
       }
     }
     
