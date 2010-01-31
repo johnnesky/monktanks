@@ -478,6 +478,11 @@ package {
             tank.hit(bullet.powerful ? 3 : 1);
             if (tank.markedAsDead && tank.parentTank == null) {
               matchEnded = true;
+              if (tank == tank1) {
+                EndState.victor = 1;
+              } else {
+                EndState.victor = 0;
+              }
             }
           }
         } else if (bullet != null) {
