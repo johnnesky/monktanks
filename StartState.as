@@ -61,7 +61,7 @@ package{
     
     private function onClick(event: MouseEvent): void {
       var index: int = getChildIndex(event.target as DisplayObject);
-      PlayState.levelNumber = index;
+      PlayState.levelNumber = index - 1;
       MonkTanks.state = MonkTanks.PLAY_STATE;
     }
   }

@@ -46,8 +46,14 @@ package {
     [Embed(source="Background3.png")]
     private static var background2Class: Class;
     
+    [Embed(source="BackgroundForest_1.png")]
+    private static var background3Class: Class;
+    
     [Embed(source="Shadow_Building1.png")]
     private static var building1ShadowClass: Class;
+    
+    [Embed(source="Shadow_Building_Vertical1.png")]
+    private static var building1VerticalShadowClass: Class;
     
     [Embed(source="Shadow_Building2.png")]
     private static var building2ShadowClass: Class;
@@ -60,7 +66,10 @@ package {
     
     [Embed(source="Shadow_Wall1.png")]
     private static var wall1ShadowClass: Class;
-
+    
+    [Embed(source="Shadow_Wall_Horizontal1.png")]
+    private static var wall1HorizontalShadowClass: Class;
+    
     [Embed(source='iconSkunk.png')]
     private static var IconSkunkClass:Class;
   
@@ -78,11 +87,14 @@ package {
       grid: gridClass,
       background1: background1Class,
       background2: background2Class,
+      background3: background3Class,
       building1Shadow: building1ShadowClass,
+      building1Vertical: building1VerticalShadowClass,
       building2Shadow: building2ShadowClass,
       cloudShadow: cloudShadowClass,
       canopyShadow: canopyShadowClass,
-      wall1Shadow: wall1ShadowClass
+      wall1Shadow: wall1ShadowClass,
+      wall1HorizontalShadow: wall1HorizontalShadowClass
     }
     
     private static var boundingBoxList: Object = {
@@ -103,26 +115,22 @@ package {
           <tank x="650" y="300" rotation="-90" type="punk" player="2"/>
         </actionLayer>
         <layer>
-      <!-- Power Ups
-          <sprite x="70" y="150" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="230" y="290" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="575" y="300" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="150" y="40" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="600" y="40" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="485" y="550" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="780" y="495" rotation="0" type="powerup" scale=".5"/>
-      -->
       <!-- Center -->
+          <sprite x="425" y="325" rotation="0" type="building2Shadow"/>
           <sprite x="400" y="300" rotation="45" type="building2"/>
           <sprite x="400" y="000" rotation="0" type="canopy" scale="1.25"/>
           <sprite x="400" y="600" rotation="0" type="canopy" scale="1.25"/>
       <!-- Left Walls -->
           <sprite x="200" y="400" rotation="0" type="canopy" scale="1.0"/>
+          <sprite x="25" y="325" rotation="0" type="building1Shadow"/>
           <sprite x="0" y="300" rotation="90" type="building1"/>
+          <sprite x="225" y="175" rotation="0" type="building1Shadow"/>
           <sprite x="200" y="150" rotation="0" type="building1"/>
       <!-- Right Walls -->
           <sprite x="600" y="200" rotation="0" type="canopy"/>
+          <sprite x="825" y="325" rotation="90" type="building1Shadow"/>
           <sprite x="800" y="300" rotation="90" type="building1"/>
+          <sprite x="625" y="475" rotation="00" type="building1Shadow"/>   
           <sprite x="600" y="450" rotation="180" type="building1"/>
       <!-- Clouds
           <sprite x="300" y="500" rotation="0" type="clouds" scale="1.0"/>
@@ -148,14 +156,6 @@ package {
           <tank x="575" y="250" rotation="-90" type="punk" player="2"/>
         </actionLayer>
         <layer>
-      <!-- Power Ups
-          <sprite x="150" y="250" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="250" y="150" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="450" y="250" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="550" y="430" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="100" y="575" rotation="0" type="powerup" scale=".5"/>
-          <sprite x="550" y="575" rotation="0" type="powerup" scale=".5"/>
-      -->
       <!-- Forest -->
           <sprite x="100" y="500" rotation="0" type="canopy" scale="1"/>
           <sprite x="225" y="550" rotation="0" type="canopy" scale="1.1"/>
@@ -172,21 +172,26 @@ package {
       <!-- Left -->
           <sprite x="250" y="195" rotation="90" type="wall1"/>
           <sprite x="350" y="195" rotation="90" type="wall1"/>
+          <sprite x="210" y="215" rotation="0" type="wall1Shadow"/>
           <sprite x="200" y="200" rotation="0" type="wall2"/>
+          <sprite x="210" y="310" rotation="0" type="wall1Shadow"/>
           <sprite x="200" y="300" rotation="0" type="wall2"/>
+          <sprite x="175" y="175" rotation="0" type="building1Shadow"/>
           <sprite x="150" y="150" rotation="0" type="building2"/>
       <!-- Right -->
           <sprite x="380" y="70" rotation="90" type="wall2"/>
           <sprite x="480" y="70" rotation="90" type="wall2"/>
           <sprite x="580" y="70" rotation="90" type="wall2"/>
+          <sprite x="530" y="262" rotation="0" type="wall1Shadow"/>
           <sprite x="520" y="242" rotation="0" type="wall1"/>
+          <sprite x="625" y="375" rotation="0" type="building1Shadow"/>
           <sprite x="600" y="350" rotation="0" type="building1"/>
         </layer>
       </level>,
       
       <level>
         <layer>
-          <sprite x="400" y="300" rotation="0" type="grid"/>
+          <sprite x="400" y="300" rotation="0" type="background3"/>
         </layer>
         <layer>
       <!-- Rocks -->
@@ -204,11 +209,17 @@ package {
         </actionLayer>
         <layer>
       <!-- Walls -->
+          <sprite x="196" y="318" rotation="0" type="wall1Shadow" scale="1"/>
+          <sprite x="276" y="318" rotation="0" type="wall1Shadow" scale="1"/>
           <sprite x="185" y="300" rotation="0" type="wall2" scale="1"/>
+<!--          <sprite x="236" y="258" rotation="0" type="wall2Shadow" scale="1"/> -->
           <sprite x="225" y="240" rotation="90" type="wall2" scale="1"/>
           <sprite x="265" y="300" rotation="0" type="wall2" scale="1"/>
           
+          <sprite x="546" y="318" rotation="0" type="wall1Shadow" scale="1"/>
+          <sprite x="626" y="318" rotation="0" type="wall1Shadow" scale="1"/>
           <sprite x="535" y="300" rotation="0" type="wall1" scale="1"/>
+<!--          <sprite x="586" y="378" rotation="0" type="wall2Shadow" scale="1"/> -->
           <sprite x="575" y="360" rotation="90" type="wall1" scale="1"/>
           <sprite x="615" y="300" rotation="0" type="wall1" scale="1"/>
       <!-- Forest -->
