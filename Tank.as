@@ -13,7 +13,19 @@ package{
   public class Tank extends Entity {
     [Embed(source='CartoonTank.swf',
            symbol='Tank1')]
-    private static const _tankSpriteClass: Class;
+    private static const _monkSpriteClass: Class;
+    
+    [Embed(source='PunkTank1.swf',
+           symbol='PunkTank1')]
+    private static const _punkSpriteClass: Class;
+    
+    [Embed(source='SkunkTank_1.swf',
+           symbol='SkunkTank1')]
+    private static const _skunkSpriteClass: Class;
+    
+    public static const TYPE_MONK:     int = 0;
+    public static const TYPE_PUNK:     int = 1;
+    public static const TYPE_SKUNK:    int = 2;
     
     public static const ACTION_NONE:    int = 0;
     public static const ACTION_FORWARD: int = 1;
@@ -42,11 +54,24 @@ package{
     public var childTank     : Tank;   // Only set if this tank has a hologram
     public var aiTaskDuration: int = 1000;
     public var markedAsDead : Boolean = false;
+    public var type: int;
     
-    public function Tank(x: Number, y: Number, angle: Number, inst: PlayState, bHologram: Boolean){
+    public function Tank(x: Number, y: Number, angle: Number, type: int, inst: PlayState, bHologram: Boolean){
       super(x,y);
       mainInstance = inst;
-      addChild(new _tankSpriteClass());
+      this.type = type;
+      
+      switch (type) {
+        case TYPE_MONK:
+          addChild(new _monkSpriteClass());
+          break;
+        case TYPE_PUNK:
+          addChild(new _punkSpriteClass());
+          break;
+        case TYPE_SKUNK:
+          addChild(new _skunkSpriteClass());
+          break;
+      }
 
       // Vars used to create physics bodies
 			var boxShape:b2PolygonShape;
@@ -119,7 +144,7 @@ package{
         }
         
         // Spawn a new holoTank
-        var holoTank : Tank = new Tank(x, y, body.GetAngle(), mainInstance, true)
+        var holoTank : Tank = new Tank(x, y, body.GetAngle(), type, mainInstance, true)
         holoTank.rotation = rotation
         holoTank.parentTank = this
         //holoTank.setCollisionFilter(true)

@@ -202,7 +202,15 @@ package {
             addChild(actionLayer);
             
             for each (var tankXML: XML in layerXML.tank) {
-              var tank: Tank = new Tank(tankXML.@x, tankXML.@y, tankXML.@rotation, this, false);
+              var type: int;
+              if (tankXML.@type == "monk") {
+                type = Tank.TYPE_MONK;
+              } else if (tankXML.@type == "punk") {
+                type = Tank.TYPE_PUNK;
+              } else if (tankXML.@type == "skunk") {
+                type = Tank.TYPE_SKUNK;
+              }
+              var tank: Tank = new Tank(tankXML.@x, tankXML.@y, tankXML.@rotation, type, this, false);
               addEntity(tank);
               if (tankXML.@player == "1") {
                 tank1 = tank;
