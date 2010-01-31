@@ -18,6 +18,7 @@ package{
     public var speed    : Number = 0.01
     public var distance : Number = 0.0
     public var maxDist  : Number = 550.0
+    public var timeLeft : int    = 3500
     private var mainInstance : PlayState
     private var shooter      : Tank
     private var bodyDef      : b2BodyDef
@@ -53,37 +54,12 @@ package{
     }
     
     override public function update(ticks: int): void {
-      /*
-      this.x += speed * Math.cos(rotation*Math.PI/180) * ticks/1000;
-      this.y += speed * Math.sin(rotation*Math.PI/180) * ticks/1000;
-      distance += speed * ticks/1000;
-      if (distance > maxDist)
+      timeLeft -= ticks;
+      if (timeLeft <= 0)
       {
-        mainInstance.removeEntity(this)
+        mainInstance.removeEntity(this);
+        mainInstance.physWorld.DestroyBody(body);
       }
-      
-      // Wrap around screen
-      if (this.x < -15)
-        this.x += 830;
-      if (this.x > 815)
-        this.x -= 830;
-      if (this.y < -15)
-        this.y += 630;
-      if (this.y > 615)
-        this.y -= 630;
-      
-      // Have we hit a tank?
-      if (shooter == mainInstance.tank1 && mainInstance.tank2.hitTestPoint(this.x, this.y))
-      {
-        mainInstance.tank2.hit();
-        mainInstance.removeEntity(this)  
-      }
-      if (shooter == mainInstance.tank2 && mainInstance.tank1.hitTestPoint(this.x, this.y))
-      {
-        mainInstance.tank1.hit();
-        mainInstance.removeEntity(this)
-      }
-      */
     }
   }
 }

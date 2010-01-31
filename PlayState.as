@@ -186,9 +186,6 @@ package{
 					entity.x = bb.GetPosition().x*20.0;
 					entity.y = bb.GetPosition().y*20.0;
 					entity.rotation = bb.GetAngle();
-          
-          trace(i + ": " + bb.GetLinearVelocity().x + ", " + bb.GetLinearVelocity().y);
-          i++;
 				}
 			}
     }
