@@ -17,6 +17,12 @@ package{
     [Embed(source="Clouds.png")]
     private static var cloudsClass: Class;
     
+    [Embed(source="wall1.png")]
+    private static var wall1Class: Class;
+    
+    [Embed(source="wall2.png")]
+    private static var wall2Class: Class;
+    
     [Embed(source="Building1.swf", symbol="Building1")]
     private static var building1Class: Class;
     
@@ -29,12 +35,16 @@ package{
     private static var spriteList: Object = {
       canopy: canopyClass,
       clouds: cloudsClass,
+      wall1: wall1Class,
+      wall2: wall2Class,
       building1: building1Class,
       building2: building2Class,
       grid: gridClass
     }
     
     private static var boundingBoxList: Object = {
+      wall1: {width: 20, height: 100},
+      wall2: {width: 20, height: 100},
       building1: {width: 180, height: 110},
       building2: {width: 120, height: 120}
     }
@@ -139,8 +149,8 @@ package{
                 var body: b2Body;
                 var boxShape:b2PolygonShape;
                 bodyDef = new b2BodyDef();
-                bodyDef.position.x = sprite.x/20.0;
-                bodyDef.position.y = sprite.y/20.0;
+                bodyDef.position.x = Number(spriteXML.@x)/20.0;
+                bodyDef.position.y = Number(spriteXML.@y)/20.0;
                 bodyDef.angle = sprite.rotation * Math.PI / 180;
                 boxShape = new b2PolygonShape();
                 boxShape.SetAsBox(bounds.width / 40, bounds.height / 40);
