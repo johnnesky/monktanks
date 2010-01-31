@@ -60,7 +60,13 @@ package {
     
     [Embed(source="Shadow_Wall1.png")]
     private static var wall1ShadowClass: Class;
-    
+
+    [Embed(source='iconSkunk.png')]
+    private static var IconSkunkClass:Class;
+  
+    [Embed(source='iconPunk.png')]
+    private static var IconPunkClass:Class;
+        
     private static var spriteList: Object = {
       canopy: canopyClass,
       clouds: cloudsClass,
@@ -394,10 +400,10 @@ package {
       // Initialize health and reload meters
       hudLayer = new Sprite();
       addChild(hudLayer);
-      health1 = new HudBar(15,  5,  0xa00000, true)
-      reload1 = new HudBar(15,  15, 0x0000a0, true)
-      health2 = new HudBar(242, 5,  0xa00000, false)
-      reload2 = new HudBar(242, 15, 0x0000a0, false)
+      health1 = new HudBar(20,  5,  0xa00000, true)
+      reload1 = new HudBar(20,  15, 0x0000a0, true)
+      health2 = new HudBar(230, 5,  0xa00000, false)
+      reload2 = new HudBar(230, 15, 0x0000a0, false)
       entities.push(health1);
       hudLayer.addChild(health1);
       entities.push(health2);
@@ -406,6 +412,14 @@ package {
       hudLayer.addChild(reload1);
       entities.push(reload2);
       hudLayer.addChild(reload2);
+      
+      var iconSkunk:Bitmap = new IconSkunkClass();
+      iconSkunk.x=5
+      iconSkunk.y=-2
+      hudLayer.addChild(iconSkunk)
+      var iconPunk:Bitmap = new IconPunkClass();
+      iconPunk.x=795-iconPunk.width
+      hudLayer.addChild(iconPunk)
       
       engineChannel = new SoundEffectManager.engine().play(0, 1000);
       
