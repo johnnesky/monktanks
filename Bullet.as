@@ -41,8 +41,9 @@ package{
       if (powerful) {
         addChild(new _bullet2SpriteClass());
         speed *= 2;
+        scaleX = scaleY = 2;
       } else {
-        addChild(new _bulletSpriteClass());
+        addChild(new _bullet2SpriteClass());
       }
       
       var circleShape:b2CircleShape;
@@ -53,7 +54,7 @@ package{
       bodyDef.position.x = (shotBy.x + dir.x*15.0)/20.0;
       bodyDef.position.y = (shotBy.y + dir.y*15.0)/20.0;
       bodyDef.fixedRotation = true;
-      circleShape = new b2CircleShape(5.0/20.0);
+      circleShape = new b2CircleShape((powerful ? 12.0 : 5.0)/20.0);
       var fixtureDef:b2FixtureDef = new b2FixtureDef();
       fixtureDef.shape = circleShape;
       fixtureDef.density = 1.0;
