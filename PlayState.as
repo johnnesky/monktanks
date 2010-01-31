@@ -159,10 +159,56 @@ package {
       </level>,
       
       <level>
+        <layer>
+          <sprite x="400" y="300" rotation="0" type="grid"/>
+        </layer>
+        <layer>
+      <!-- Rocks -->
+          <sprite x="40" y="175" rotation="0" type="rocks1" scale="1"/>
+          <sprite x="80" y="400" rotation="60" type="rocks1" scale="1"/>
+          <sprite x="380" y="100" rotation="30" type="rocks1" scale="1"/>
+          <sprite x="425" y="480" rotation="50" type="rocks1" scale="1"/>
+          <sprite x="500" y="280" rotation="110" type="rocks1" scale="1"/>
+          <sprite x="685" y="450" rotation="220" type="rocks1" scale="1"/>
+          <sprite x="705" y="200" rotation="270" type="rocks1" scale="1"/>
+        </layer>
         <actionLayer>
-          <tank x="250" y="250" rotation="90" type="skunk" player="1"/>
-          <tank x="575" y="250" rotation="-90" type="punk" player="2"/>
+          <tank x="225" y="300" rotation="90" type="skunk" player="1"/>
+          <tank x="575" y="300" rotation="-90" type="punk" player="2"/>
         </actionLayer>
+        <layer>
+      <!-- Walls -->
+          <sprite x="185" y="300" rotation="0" type="wall2" scale="1"/>
+          <sprite x="225" y="240" rotation="90" type="wall2" scale="1"/>
+          <sprite x="265" y="300" rotation="0" type="wall2" scale="1"/>
+          
+          <sprite x="535" y="300" rotation="0" type="wall1" scale="1"/>
+          <sprite x="575" y="360" rotation="90" type="wall1" scale="1"/>
+          <sprite x="615" y="300" rotation="0" type="wall1" scale="1"/>
+      <!-- Forest -->
+          <sprite x="150" y="-25" rotation="0" type="canopy" scale="1"/>
+          <sprite x="150" y="575" rotation="0" type="canopy" scale="1"/>
+          
+          <sprite x="80" y="300" rotation="0" type="canopy" scale="1.5"/>
+          <sprite x="300" y="500" rotation="0" type="canopy" scale="1.5"/>
+          
+          <sprite x="225" y="100" rotation="0" type="canopy" scale="1"/>
+          <sprite x="350" y="200" rotation="0" type="canopy" scale="1"/>
+          <sprite x="600" y="150" rotation="0" type="canopy" scale="1"/>
+          
+          <sprite x="400" y="300" rotation="0" type="canopy" scale="1.2"/>
+          
+          <sprite x="500" y="420" rotation="0" type="canopy" scale="1"/>
+          
+          <sprite x="770" y="100" rotation="0" type="canopy" scale="1.25"/>
+          <sprite x="-30" y="100" rotation="0" type="canopy" scale="1.25"/>
+          
+          <sprite x="830" y="500" rotation="0" type="canopy" scale="1.25"/>
+          <sprite x="30" y="500" rotation="0" type="canopy" scale="1.25"/>
+          
+          <sprite x="600" y="560" rotation="0" type="canopy" scale="1.75"/>
+          <sprite x="600" y="-40" rotation="0" type="canopy" scale="1.75"/>
+        </layer>
       </level>
     ];
     public static const P1_FORWARD_KEY: int = 87;
@@ -196,6 +242,7 @@ package {
     private var matchEnded: Boolean = false;
     private var ticksUntilEndScreen: int = 3000;
     private var engineChannel: SoundChannel;
+    private var ticksUntilPowerup: int;
     
     public function PlayState(stage: Stage) {
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
@@ -341,6 +388,8 @@ package {
       hudLayer.addChild(reload2);
       
       engineChannel = new SoundEffectManager.engine().play(0, 1000);
+      
+      ticksUntilPowerup = 10000 + 5000 * Math.random();
     }
     
     public function addEntity(entity: Entity): void {
@@ -387,8 +436,10 @@ package {
         blimp.y = 600 + Math.random() * 200;
       }
       
-      if (Math.random() > 0.997) {
+      ticksUntilPowerup -= ticks;
+      if (ticksUntilPowerup <= 0) {
         addEntity(new Powerup(Math.random() * 800, Math.random() * 600, Math.random() * 3, this));
+        ticksUntilPowerup = 10000 + 5000 * Math.random();
       }
       
       physWorld.Step(ticks, 10, 10);
