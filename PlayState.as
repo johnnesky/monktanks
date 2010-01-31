@@ -89,7 +89,7 @@ package {
       background2: background2Class,
       background3: background3Class,
       building1Shadow: building1ShadowClass,
-      building1Vertical: building1VerticalShadowClass,
+      building1VerticalShadow: building1VerticalShadowClass,
       building2Shadow: building2ShadowClass,
       cloudShadow: cloudShadowClass,
       canopyShadow: canopyShadowClass,
@@ -395,7 +395,7 @@ package {
       addChild(cloudLayer);
       
       for (var i: int = 0; i < 4; i++) {
-        var cloud: DisplayObject = new cloudsClass();
+        var cloud: DisplayObject = new cloudShadowClass();
         cloud.x = Math.random() * 800;
         cloud.y = Math.random() * 600;
         clouds.push(cloud);
@@ -458,7 +458,7 @@ package {
       }
       
       if (Math.random() * Math.random() > 0.93) {
-        var cloud: DisplayObject = new cloudsClass();
+        var cloud: DisplayObject = new cloudShadowClass();
         cloud.x = -300;
         cloud.y = Math.random() * 600;
         clouds.push(cloud);
