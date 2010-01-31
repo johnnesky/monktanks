@@ -57,6 +57,21 @@ package{
       fixtureDef.density = 1.0;
       fixtureDef.friction = 0.0;
       fixtureDef.restitution = 0.8;
+      
+      // Set up what this will collide with
+      if (shooter.playerId == 1)
+      {
+        // Player 1 fires
+        fixtureDef.filter.categoryBits = BIT_BULLET1
+        fixtureDef.filter..maskBits     = BIT_TANK2 | BIT_HOLOGRAM2 | BIT_BULLET2 | BIT_ENVIRO
+      }
+      else
+      {
+        // Player 2 fires
+        fixtureDef.filter..categoryBits = BIT_BULLET2
+        fixtureDef.filter..maskBits     = BIT_TANK1 | BIT_HOLOGRAM1 | BIT_BULLET1 | BIT_ENVIRO
+      }
+      
       bodyDef.userData = this;
       body = mainInstance.physWorld.CreateBody(bodyDef);
       body.SetType(b2Body.b2_dynamicBody);
@@ -64,17 +79,6 @@ package{
       body.ResetMassData();
       body.SetAngle(shotBy.rotation);
       body.SetLinearVelocity(new b2Vec2(dir.x*speed, dir.y*speed))
-      
-      // Set up what this will collide with
-      var fixture:b2Fixture = body.GetFixtureList();
-      while (fixture)
-      {
-        var filterData : b2FilterData = new b2FilterData;
-        filterData.categoryBits = BIT_BULLET
-        filterData.maskBits     = BIT_TANK | BIT_HOLOGRAM | BIT_BULLET | BIT_ENVIRO
-        fixture.SetFilterData(filterData);
-        fixture = fixture.GetNext();
-      }
       
       if (Math.random() > 0.5) {
         new SoundEffectManager.shot1().play();

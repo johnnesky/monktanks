@@ -76,7 +76,7 @@ package{
       {
         var filterData : b2FilterData = new b2FilterData;
         filterData.categoryBits = BIT_ENVIRO;
-        filterData.maskBits     = BIT_TANK | BIT_HOLOGRAM | BIT_ENVIRO;
+        filterData.maskBits     = BIT_TANK1 | BIT_TANK2 | BIT_HOLOGRAM1 | BIT_HOLOGRAM2 | BIT_ENVIRO;
         fixture.SetFilterData(filterData);
         fixture = fixture.GetNext();
       }

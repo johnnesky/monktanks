@@ -40,6 +40,7 @@ package{
     private var bKeyLeft    : Boolean = false;
     private var bKeyRight   : Boolean = false;
     
+    public var playerId      : int = 0
     public var currentAction : int = ACTION_NONE;
     public var speed         : Number = 0.004;
     public var reloadTime    : int = 0     // ms until recharge is complete
@@ -56,10 +57,12 @@ package{
     public var type: int;
     public var powerupType: int = -1;
     
-    public function Tank(x: Number, y: Number, angle: Number, type: int, inst: PlayState, bHologram: Boolean){
+    public function Tank(x: Number, y: Number, angle: Number, type: int, inst: PlayState, playerId: Number, parentTank: Tank){
       super(x,y);
       mainInstance = inst;
       this.type = type;
+      this.playerId = playerId;
+      this.parentTank = parentTank
       
       switch (type) {
         case TYPE_MONK:
@@ -80,6 +83,7 @@ package{
       bodyDef = new b2BodyDef();
       bodyDef.position.x = x/20.0;
       bodyDef.position.y = y/20.0;
+      
       bodyDef.angle = angle;
       bodyDef.fixedRotation = true;
       boxShape = new b2PolygonShape();
@@ -89,35 +93,38 @@ package{
       fixtureDef.density = 1.0;
       fixtureDef.friction = 0.3;
       fixtureDef.restitution = 0.0;
+      
+      // Setup collision filters
+      if (parentTank && parentTank.playerId == 1)
+      {
+        // Hologram created by tank1
+        fixtureDef.filter.categoryBits = BIT_HOLOGRAM1
+        fixtureDef.filter.maskBits     = BIT_HOLOGRAM2 | BIT_BULLET2 | BIT_ENVIRO
+      }
+      else if (parentTank && parentTank.playerId == 2)
+      {
+        // Hologram created by tank2
+        fixtureDef.filter.categoryBits = BIT_HOLOGRAM2
+        fixtureDef.filter.maskBits     = BIT_HOLOGRAM1 | BIT_BULLET1 | BIT_ENVIRO
+      }
+      else if (playerId == 1)
+      {
+        // Player 1
+        fixtureDef.filter.categoryBits = BIT_TANK1
+        fixtureDef.filter.maskBits     = BIT_TANK2 | BIT_BULLET2 | BIT_ENVIRO
+      }
+      else
+      {
+        // Player 2
+        fixtureDef.filter.categoryBits = BIT_TANK2
+        fixtureDef.filter.maskBits     = BIT_TANK1 | BIT_BULLET1 | BIT_ENVIRO
+      }
+      
       bodyDef.userData = this;
       body = mainInstance.physWorld.CreateBody(bodyDef);
       body.SetType(b2Body.b2_dynamicBody);
       var fixture:b2Fixture = body.CreateFixture(fixtureDef);
       body.ResetMassData();
-      
-      // Set default collision parameters
-      setCollisionFilter(bHologram)
-    }
-            
-    public function setCollisionFilter(bHologram: Boolean): void{
-      // Set up what this will collide with
-      var fixture:b2Fixture = body.GetFixtureList();
-      while (fixture)
-      {
-        var filterData : b2FilterData = new b2FilterData;
-        if (bHologram)
-        {
-          filterData.categoryBits = BIT_HOLOGRAM
-          filterData.maskBits     = BIT_HOLOGRAM | BIT_BULLET | BIT_ENVIRO
-        }
-        else
-        {
-          filterData.categoryBits = BIT_TANK
-          filterData.maskBits     = BIT_TANK | BIT_BULLET | BIT_ENVIRO
-        }
-        fixture.SetFilterData(filterData);
-        fixture = fixture.GetNext();
-      }
     }
     
     public function keydown(action: int, pressed: Boolean): void {
@@ -147,10 +154,8 @@ package{
         }
         
         // Spawn a new holoTank
-        var holoTank : Tank = new Tank(x, y, body.GetAngle(), type, mainInstance, true)
+        var holoTank : Tank = new Tank(x, y, body.GetAngle(), type, mainInstance, 0, this)
         holoTank.rotation = rotation
-        holoTank.parentTank = this
-        //holoTank.setCollisionFilter(true)
         childTanks.push(holoTank);
         holoTank.nextAiTask()
         mainInstance.addEntity(holoTank)

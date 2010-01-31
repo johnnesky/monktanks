@@ -199,7 +199,7 @@ package {
                 {
                   var filterData : b2FilterData = new b2FilterData;
                   filterData.categoryBits = Entity.BIT_ENVIRO
-                  filterData.maskBits     = Entity.BIT_TANK | Entity.BIT_HOLOGRAM | Entity.BIT_BULLET | Entity.BIT_ENVIRO
+                  filterData.maskBits     = Entity.BIT_TANK1 | Entity.BIT_TANK2 | Entity.BIT_HOLOGRAM1 | Entity.BIT_HOLOGRAM2 | Entity.BIT_BULLET1 | Entity.BIT_BULLET2 | Entity.BIT_ENVIRO
                   fixture.SetFilterData(filterData);
                   fixture = fixture.GetNext();
                 }
@@ -220,7 +220,7 @@ package {
               } else if (tankXML.@type == "skunk") {
                 type = Tank.TYPE_SKUNK;
               }
-              var tank: Tank = new Tank(tankXML.@x, tankXML.@y, tankXML.@rotation, type, this, false);
+              var tank: Tank = new Tank(tankXML.@x, tankXML.@y, tankXML.@rotation, type, this, tankXML.@player, null);
               addEntity(tank);
               if (tankXML.@player == "1") {
                 tank1 = tank;
