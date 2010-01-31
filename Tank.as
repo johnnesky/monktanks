@@ -5,6 +5,11 @@ package{
   import flash.text.*;
   import flash.utils.*;
   
+  import Box2D.Dynamics.*;
+	import Box2D.Collision.*;
+	import Box2D.Collision.Shapes.*;
+	import Box2D.Common.Math.*;
+  
   public class Tank extends Entity {
     [Embed(source='CartoonTank.swf',
            symbol='Tank1')]
@@ -24,16 +29,41 @@ package{
     private var bKeyRight   : Boolean = false;
     
     public var currentAction : int = ACTION_NONE;
-    public var speed         : Number = 80.0;
+    public var speed         : Number = 0.003;
     public var rotationSpeed : Number = 120.0;
     private var reloadTime   : int = 0     // ms until recharge is complete
     private var reloadMax    : int = 3500  // ms required for total recharge
     private var mainInstance : PlayState
+    private var health       : int = 100;
+    private var bodyDef      : b2BodyDef
+    private var body         : b2Body
     
     public function Tank(x: Number, y: Number, inst: PlayState){
       super(x,y);
       mainInstance = inst;
       addChild(new _tankSpriteClass());
+
+    
+      // Vars used to create physics bodies
+			var boxShape:b2PolygonShape;
+			//var circleShape:b2CircleShape;
+      
+      // Init the physics body
+      bodyDef = new b2BodyDef();
+      bodyDef.position.x = x/20.0;
+      bodyDef.position.y = y/20.0;
+      boxShape = new b2PolygonShape();
+      boxShape.SetAsBox(15.0/20.0,15.0/20.0);
+      var fixtureDef:b2FixtureDef = new b2FixtureDef();
+      fixtureDef.shape = boxShape;
+      fixtureDef.density = 1.0;
+      fixtureDef.friction = 0.3;
+      fixtureDef.restitution = 0.0;
+      bodyDef.userData = this;
+      body = mainInstance.physWorld.CreateBody(bodyDef);
+      body.SetType(b2Body.b2_dynamicBody);
+      body.CreateFixture(fixtureDef);
+      body.ResetMassData();
     }
 
     public function keydown(action: int, pressed: Boolean): void {
@@ -47,7 +77,7 @@ package{
         bKeyRight = pressed
       else if (action == ACTION_FIRE && pressed && reloadTime <= 0)
       {
-        var bullet : Bullet = new Bullet(x, y, rotation, mainInstance);
+        var bullet : Bullet = new Bullet(mainInstance, this);
         mainInstance.addEntity(bullet)
         reloadTime = reloadMax
       }
@@ -67,35 +97,44 @@ package{
         currentAction = ACTION_NONE
     }
     
+    public function hit(): void {
+      health = 0;
+    }
+    
     override public function update(ticks: int): void {
+      var vec : b2Vec2;
       if (currentAction == ACTION_FORWARD)
       {
-        this.x += speed * Math.cos(rotation*Math.PI/180) * ticks/1000;
-        this.y += speed * Math.sin(rotation*Math.PI/180) * ticks/1000;
+        vec = new b2Vec2(speed * Math.cos(rotation*Math.PI/180), speed * Math.sin(rotation*Math.PI/180))
+        body.SetLinearVelocity(vec)
+        //body.SetAngularVelocity(0);
       }
       else if (currentAction == ACTION_BACK)
       {
-        this.x -= speed * Math.cos(rotation*Math.PI/180) * ticks/1000;
-        this.y -= speed * Math.sin(rotation*Math.PI/180) * ticks/1000;
+        vec = new b2Vec2(-speed * Math.cos(rotation*Math.PI/180), -speed * Math.sin(rotation*Math.PI/180))
+        body.SetLinearVelocity(vec)
+        //body.SetAngularVelocity(0);
       }
       else if (currentAction == ACTION_LEFT)
       {
-        rotation -= rotationSpeed * ticks/1000;
+        vec = new b2Vec2(0,0);
+        body.SetLinearVelocity(vec)
+        //body.SetAngularVelocity(-0.50);
+        body.SetAngle(body.GetAngle()-60.0*ticks/1000.0);
       }
       else if (currentAction == ACTION_RIGHT)
       {
-        rotation += rotationSpeed * ticks/1000;
+        vec = new b2Vec2(0,0);
+        body.SetLinearVelocity(vec)
+        //body.SetAngularVelocity(0.50);
+        body.SetAngle(body.GetAngle()+60.0*ticks/1000.0);
       }
-      
-      // Wrap around screen
-      if (this.x < -15)
-        this.x += 830;
-      if (this.x > 815)
-        this.x -= 830;
-      if (this.y < -15)
-        this.y += 630;
-      if (this.y > 615)
-        this.y -= 630;
+      else
+      {
+        vec = new b2Vec2(0,0);
+        body.SetLinearVelocity(vec)
+        //body.SetAngularVelocity(0)
+      }
       
       // Decrement remaining reload time
       if (reloadTime >= 0)

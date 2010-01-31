@@ -5,6 +5,11 @@ package{
   import flash.text.*;
   import flash.utils.*;
   
+  import Box2D.Dynamics.*;
+  import Box2D.Collision.*;
+  import Box2D.Collision.Shapes.*;
+  import Box2D.Common.Math.*;
+    
   public class PlayState extends GameState {
     [Embed(source="canopy.png")]
     private static var canopyClass: Class;
@@ -69,14 +74,23 @@ package{
     
     private var actionLayer: Sprite;
     private var entities: Array = [];
-    private var tank1 : Tank;
-    private var tank2 : Tank;
-    
+    public var tank1 : Tank;
+    public var tank2 : Tank;
+    public var physWorld : b2World;
+      
     public function PlayState(stage: Stage) {
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
       stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
       
-			var ns: Namespace = levelXML.namespace("");
+      // Initialize physics container
+      // Define the gravity vector
+			var gravity:b2Vec2 = new b2Vec2(0.0, 0.0);
+			
+			// Construct a world object
+			physWorld = new b2World( gravity, false);
+      
+      var ns: Namespace = levelXML.namespace("");
+      trace("parsing", levelXML.toXMLString());
 			
       for each (var layerXML: XML in levelXML.children()) {
         switch (String(layerXML.localName())) {
@@ -148,8 +162,35 @@ package{
     
     public override function update(ticks: int): void {
       for each (var entity: Entity in entities) {
-        entity.update(33);
+        entity.update(ticks);
       }
+      
+      physWorld.Step(ticks, 10, 10);
+			
+			// Go through body list and update sprite positions/rotations
+      var i : int = 0;
+			for (var bb:b2Body = physWorld.GetBodyList(); bb; bb = bb.GetNext())
+      {
+				if (bb.GetUserData() is Entity)
+        {
+          if (bb.GetPosition().x < -15.0/20.0)
+            bb.GetPosition().x += 830.0/20.0;
+          if (bb.GetPosition().x > 815.0/20.0)
+            bb.GetPosition().x -= 830.0/20.0;
+          if (bb.GetPosition().y < -15.0/20.0)
+            bb.GetPosition().y += 630.0/20.0;
+          if (bb.GetPosition().y > 615.0/20.0)
+            bb.GetPosition().y -= 630.0/20.0;
+          
+					entity = bb.GetUserData() as Entity;
+					entity.x = bb.GetPosition().x*20.0;
+					entity.y = bb.GetPosition().y*20.0;
+					entity.rotation = bb.GetAngle();
+          
+          trace(i + ": " + bb.GetLinearVelocity().x + ", " + bb.GetLinearVelocity().y);
+          i++;
+				}
+			}
     }
     
     public override function destroy(): void {
