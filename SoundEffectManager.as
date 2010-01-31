@@ -6,6 +6,12 @@ package{
   import flash.utils.*;
   
   public class SoundEffectManager {
+    [Embed('sfx/clickdown.mp3')]
+    public static var clickdown:Class;
+    [Embed('sfx/travelingshot.mp3')]
+    public static var travelingshot:Class;
+    [Embed('sfx/engine.mp3')]
+    public static var engine:Class;
     [Embed('sfx/xplosion.mp3')]
     public static var xplosion:Class;
     [Embed('sfx/shot1.mp3')]

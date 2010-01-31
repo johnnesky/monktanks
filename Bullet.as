@@ -4,6 +4,7 @@ package{
   import flash.geom.*;
   import flash.text.*;
   import flash.utils.*;
+  import flash.media.SoundChannel;
   
   import Box2D.Dynamics.*;
   import Box2D.Collision.*;
@@ -28,6 +29,7 @@ package{
     private var body         : b2Body
     private var markedAsDead : Boolean = false;
     public var powerful: Boolean;
+    private var humChannel: SoundChannel;
     
     public function Bullet(inst: PlayState, powerful: Boolean, shotBy: Tank){
       super(x,y);
@@ -85,6 +87,8 @@ package{
       } else {
         new SoundEffectManager.shot2().play();
       }
+      
+      humChannel = new SoundEffectManager.travelingshot().play(0, 1000);
     }
     
     override public function update(ticks: int): void {
@@ -94,6 +98,7 @@ package{
         mainInstance.removeEntity(this);
         mainInstance.physWorld.DestroyBody(body);
         mainInstance.addEntity(new Impact(x, y, mainInstance));
+        humChannel.stop();
       }
     }
     

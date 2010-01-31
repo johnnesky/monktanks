@@ -145,6 +145,9 @@ package{
         var bullet : Bullet = new Bullet(mainInstance, (powerupPowerTime > 0), this);
         mainInstance.addEntity(bullet)
         reloadTime = reloadMax
+      } 
+      else if (action == ACTION_FIRE && pressed) {
+        new SoundEffectManager.clickdown().play();
       }
       else if (action == ACTION_CLONE && pressed)
       {
