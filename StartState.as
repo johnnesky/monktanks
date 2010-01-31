@@ -6,6 +6,9 @@ package{
   import flash.utils.*;
   
   public class StartState extends GameState {
+    [Embed(source='Start_Screen.png')]
+    private static const _screenSpriteClass: Class;
+    
     [Embed(source='select_map_1.png')]
     private static const _map1SpriteClass: Class;
     
@@ -20,6 +23,8 @@ package{
     public function StartState(stage: Stage) {
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
       stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+      
+      addChild(new _screenSpriteClass());
       
       for (var i: int = 0; i < thumbnailList.length; i++) {
         var thumbnail: DisplayObject;

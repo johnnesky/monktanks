@@ -46,6 +46,21 @@ package {
     [Embed(source="Background3.png")]
     private static var background2Class: Class;
     
+    [Embed(source="Shadow_Building1.png")]
+    private static var building1ShadowClass: Class;
+    
+    [Embed(source="Shadow_Building2.png")]
+    private static var building2ShadowClass: Class;
+    
+    [Embed(source="Shadow_Cloud.png")]
+    private static var cloudShadowClass: Class;
+    
+    [Embed(source="Shadow_Tree.png")]
+    private static var canopyShadowClass: Class;
+    
+    [Embed(source="Shadow_Wall1.png")]
+    private static var wall1ShadowClass: Class;
+    
     private static var spriteList: Object = {
       canopy: canopyClass,
       clouds: cloudsClass,
@@ -56,7 +71,12 @@ package {
       building2: building2Class,
       grid: gridClass,
       background1: background1Class,
-      background2: background2Class
+      background2: background2Class,
+      building1Shadow: building1ShadowClass,
+      building1Shadow: building2ShadowClass,
+      cloudShadow: cloudShadowClass,
+      canopyShadow: canopyShadowClass,
+      wall1Shadow: wall1ShadowClass
     }
     
     private static var boundingBoxList: Object = {
