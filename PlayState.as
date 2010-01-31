@@ -73,7 +73,7 @@ package {
       background1: background1Class,
       background2: background2Class,
       building1Shadow: building1ShadowClass,
-      building1Shadow: building2ShadowClass,
+      building2Shadow: building2ShadowClass,
       cloudShadow: cloudShadowClass,
       canopyShadow: canopyShadowClass,
       wall1Shadow: wall1ShadowClass
