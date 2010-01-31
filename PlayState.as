@@ -130,12 +130,14 @@ package{
                 sprite = tempSprite;
               } else {
                 var sprite: DisplayObject = new spriteClass();
-                layerSprite.addChild(sprite);
-                sprite.rotation = spriteXML.@rotation;
-                sprite.x = spriteXML.@x;
-                sprite.y = spriteXML.@y;
+                var container: Sprite = new Sprite();
+                container.addChild(sprite);
+                layerSprite.addChild(container);
+                container.rotation = spriteXML.@rotation;
+                container.x = spriteXML.@x;
+                container.y = spriteXML.@y;
                 if (spriteXML.@scale != undefined) {
-                  sprite.scaleX = sprite.scaleY = spriteXML.@scale;
+                  container.scaleX = container.scaleY = spriteXML.@scale;
                 }
                 if (sprite is Bitmap) {
                   sprite.x -= sprite.width/2;
@@ -151,7 +153,7 @@ package{
                 bodyDef = new b2BodyDef();
                 bodyDef.position.x = Number(spriteXML.@x)/20.0;
                 bodyDef.position.y = Number(spriteXML.@y)/20.0;
-                bodyDef.angle = sprite.rotation * Math.PI / 180;
+                bodyDef.angle = Number(spriteXML.@rotation) * Math.PI / 180;
                 boxShape = new b2PolygonShape();
                 boxShape.SetAsBox(bounds.width / 40, bounds.height / 40);
                 var fixtureDef:b2FixtureDef = new b2FixtureDef();
