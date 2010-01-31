@@ -172,6 +172,7 @@ package {
                 bodyDef.position.x = Number(spriteXML.@x)/20.0;
                 bodyDef.position.y = Number(spriteXML.@y)/20.0;
                 bodyDef.angle = Number(spriteXML.@rotation) * Math.PI / 180;
+                bodyDef.userData = new String(spriteXML.@type);
                 boxShape = new b2PolygonShape();
                 boxShape.SetAsBox(bounds.width / 40, bounds.height / 40);
                 var fixtureDef:b2FixtureDef = new b2FixtureDef();
@@ -289,8 +290,16 @@ package {
         }
       }
       
+      physWorld.Step(ticks, 10, 10);
+      
       var contact: b2Contact = physWorld.GetContactList();
       while (contact != null) {
+        if (!contact.IsTouching())
+        {
+          contact = contact.GetNext();
+          continue;
+        }
+        
         var tank: Tank = null;
         if (contact.GetFixtureA().GetBody().GetUserData() is Tank) {
           tank = contact.GetFixtureA().GetBody().GetUserData();
@@ -322,8 +331,6 @@ package {
       for each (var entity: Entity in entities) {
         entity.update(ticks);
       }
-      
-      physWorld.Step(ticks, 10, 10);
 			
 			// Go through body list and update sprite positions/rotations
       var i : int = 0;
@@ -331,14 +338,16 @@ package {
       {
 				if (bb.GetUserData() is Entity)
         {
-          if (bb.GetPosition().x < -15.0/20.0)
-            bb.GetPosition().x += 830.0/20.0;
-          if (bb.GetPosition().x > 815.0/20.0)
-            bb.GetPosition().x -= 830.0/20.0;
-          if (bb.GetPosition().y < -15.0/20.0)
-            bb.GetPosition().y += 630.0/20.0;
-          if (bb.GetPosition().y > 615.0/20.0)
-            bb.GetPosition().y -= 630.0/20.0;
+          var pos : b2Vec2 = bb.GetPosition();
+          if (pos.x < -15.0/20.0)
+            pos.x += 830.0/20.0;
+          if (pos.x > 815.0/20.0)
+            pos.x -= 830.0/20.0;
+          if (pos.y < -15.0/20.0)
+            pos.y += 630.0/20.0;
+          if (pos.y > 615.0/20.0)
+            pos.y -= 630.0/20.0;
+          bb.SetPosition(pos);
           
 					entity = bb.GetUserData() as Entity;
 					entity.x = bb.GetPosition().x*20.0;
@@ -348,43 +357,24 @@ package {
 			}
       
       // Update the health and recharge meters
-
       var meter : Number = 0;
-
       if (tank1 != null)
-
       {
-
         meter = tank1.health/tank1.maxHealth;
-
         health1.val = meter
-
         meter = 1;
-
         if (tank1.reloadTime > 0)
-
           meter = 1.0 - tank1.reloadTime/tank1.reloadMax;
-
         reload1.val = meter
-
       }
-
       if (tank2 != null)
-
       {
-
         meter = tank2.health/tank2.maxHealth;
-
         health2.val = meter
-
         meter = 1;
-
         if (tank2.reloadTime > 0)
-
           meter = 1.0 - tank2.reloadTime/tank2.reloadMax;
-
         reload2.val = meter
-
       }
     }
     
