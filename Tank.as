@@ -55,7 +55,10 @@ package{
     public var aiTaskDuration: int = 1000;
     public var markedAsDead : Boolean = false;
     public var type: int;
-    public var powerupType: int = -1;
+      
+    public var powerupSpeedTime : int = -1;
+    public var powerupCrowdTime : int = -1;
+    public var powerupPowerTime : int = -1;
     
     public function Tank(x: Number, y: Number, angle: Number, type: int, inst: PlayState, playerId: Number, parentTank: Tank){
       super(x,y);
@@ -139,14 +142,14 @@ package{
         bKeyRight = pressed
       else if (action == ACTION_FIRE && pressed && reloadTime <= 0)
       {
-        var bullet : Bullet = new Bullet(mainInstance, powerupType == Powerup.TYPE_POWER, this);
+        var bullet : Bullet = new Bullet(mainInstance, (powerupPowerTime > 0), this);
         mainInstance.addEntity(bullet)
         reloadTime = reloadMax
       }
       else if (action == ACTION_CLONE && pressed)
       {
         // If this tank alraedy had a hologram, delete it
-        var maxChildren: int = powerupType == Powerup.TYPE_CROWD ? 4 : 1;
+        var maxChildren: int = (powerupCrowdTime > 0) ? 4 : 1;
         while (childTanks.length >= maxChildren)
         {
           childTanks[0].disappear();
@@ -194,6 +197,15 @@ package{
       mainInstance.physWorld.DestroyBody(body);
     }
     
+    public function setPowerup(type: int): void {
+      if (type == Powerup.TYPE_CROWD)
+        powerupCrowdTime = 30000
+      if (type == Powerup.TYPE_SPEED)
+        powerupSpeedTime = 30000
+      if (type == Powerup.TYPE_POWER)
+        powerupPowerTime = 30000
+    }
+    
     public function nextAiTask() : void {
       // Randomly choose one of 4 AI tasks: left, right, forward or none
       var taskId : int = Math.random()*4.0
@@ -220,6 +232,10 @@ package{
     }
     
     override public function update(ticks: int): void {
+      powerupSpeedTime -= ticks;
+      powerupCrowdTime -= ticks;
+      powerupPowerTime -= ticks;
+      
       if (markedAsDead) {
         // If this is a clone, remove it from its parent's childTanks list
         if (parentTank)
@@ -243,9 +259,12 @@ package{
         }
       }
       
-      var scaledSpeed: Number = speed * (powerupType == Powerup.TYPE_SPEED ? 2.0 : 1.0);
-      var turnSpeed: Number = 100 * (powerupType == Powerup.TYPE_SPEED ? 2.0 : 1.0);
-      
+      var scaledSpeed : Number = speed;
+      var turnSpeed : Number = 100;
+      if (powerupSpeedTime > 0)
+        scaledSpeed *= 2.0;
+      if (powerupSpeedTime > 0)
+        turnSpeed *= 2.0 
       
       if (currentAction == ACTION_FORWARD)
       {

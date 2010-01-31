@@ -21,6 +21,7 @@ package{
     public static const TYPE_POWER: int = 2;
     
     public var type: int;
+    private var timeLeft     : int = 45000
     private var mainInstance : PlayState
     private var bodyDef      : b2BodyDef
     private var body         : b2Body
@@ -83,6 +84,11 @@ package{
     }
     
     override public function update(ticks: int): void {
+      // Decrement time remaining
+      timeLeft -= ticks;
+      if (timeLeft < 0)
+        markedAsDead = true;
+      
       if (markedAsDead)
       {
         mainInstance.removeEntity(this);

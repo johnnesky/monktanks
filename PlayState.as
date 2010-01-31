@@ -356,7 +356,7 @@ package {
         } else if (bullet != null) {
           bullet.kill();
         } else if (powerup != null && tank != null) {
-          tank.powerupType = powerup.type;
+          tank.setPowerup(powerup.type);
           powerup.kill();
         }
         
