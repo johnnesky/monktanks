@@ -4,7 +4,6 @@ package {
   import flash.geom.*;
   import flash.text.*;
   import flash.utils.*;
-  import flash.media.SoundChannel;
   
   import Box2D.Dynamics.*;
   import Box2D.Dynamics.Contacts.*;
@@ -269,7 +268,6 @@ package {
     public var reload2 : HudBar;
     private var matchEnded: Boolean = false;
     private var ticksUntilEndScreen: int = 3000;
-    private var engineChannel: SoundChannel;
     private var ticksUntilPowerup: int;
     
     public function PlayState(stage: Stage) {
@@ -421,8 +419,6 @@ package {
       var iconPunk:Bitmap = new IconPunkClass();
       iconPunk.x=795-iconPunk.width
       hudLayer.addChild(iconPunk)
-      
-      engineChannel = new SoundEffectManager.engine().play(0, 1000);
       
       ticksUntilPowerup = 10000 + 5000 * Math.random();
     }
@@ -583,7 +579,7 @@ package {
     public override function destroy(): void {
       stage.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
       stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-      engineChannel.stop();
+      Tank.totalEngines = 0;
     }
     
     private function onKeyDown(event: KeyboardEvent): void {

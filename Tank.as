@@ -4,6 +4,7 @@ package{
   import flash.geom.*;
   import flash.text.*;
   import flash.utils.*;
+  import flash.media.SoundChannel;
   
   import Box2D.Dynamics.*;
 	import Box2D.Collision.*;
@@ -59,6 +60,39 @@ package{
     public var powerupSpeedTime : int = -1;
     public var powerupCrowdTime : int = -1;
     public var powerupPowerTime : int = -1;
+    
+    
+    private var _engineRunning: Boolean = false;
+    private static var _totalEngines: int = 0;
+    private static var engineChannel: SoundChannel = null;
+    [Bindable]
+    private function get engineRunning(): Boolean {
+      return _engineRunning;
+    }
+    private function set engineRunning(val: Boolean): void {
+      _engineRunning = val;
+      if (_engineRunning) {
+        totalEngines++;
+      } else {
+        totalEngines--;
+      }
+    }
+    public static function get totalEngines(): int {
+      return _totalEngines;
+    }
+    public static function set totalEngines(val: int): void {
+      _totalEngines = val;
+      if (_totalEngines > 0) {
+        if (engineChannel == null) {
+          engineChannel = new SoundEffectManager.engine().play(0, 1000);
+        }
+      } else {
+        if (engineChannel != null) {
+          engineChannel.stop();
+          engineChannel = null;
+        }
+      }
+    }
     
     public function Tank(x: Number, y: Number, angle: Number, type: int, inst: PlayState, playerId: Number, parentTank: Tank){
       super(x,y);
@@ -247,6 +281,7 @@ package{
         mainInstance.removeEntity(this);
         mainInstance.physWorld.DestroyBody(body);
         mainInstance.addEntity(new Explosion(x, y, mainInstance));
+        engineRunning = false;
         return;
       }
       
@@ -302,6 +337,10 @@ package{
       {
         reloadTime -= ticks
       }
+      
+      
+      engineRunning = (currentAction == ACTION_FORWARD || currentAction == ACTION_BACK || 
+                       currentAction == ACTION_LEFT    || currentAction == ACTION_RIGHT);
     }
   }
 }
