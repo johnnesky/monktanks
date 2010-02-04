@@ -16,12 +16,6 @@ package {
     [Embed(source="Blimp.png")]
     private static var blimpClass: Class;
     
-    [Embed(source="canopy.png")]
-    private static var canopyClass: Class;
-    
-    [Embed(source="Clouds.png")]
-    private static var cloudsClass: Class;
-    
     [Embed(source="wall1.png")]
     private static var wall1Class: Class;
     
@@ -37,16 +31,16 @@ package {
     [Embed(source="Building2.swf", symbol="Building2")]
     private static var building2Class: Class;
     
-    [Embed(source="backgroundGrid.png")]
-    private static var gridClass: Class;
+    //[Embed(source="backgroundGrid.png")]
+    //private static var gridClass: Class;
     
-    [Embed(source="Background.png")]
+    [Embed(source="Background.jpg")]
     private static var background1Class: Class;
     
-    [Embed(source="Background3.png")]
+    [Embed(source="Background3.jpg")]
     private static var background2Class: Class;
     
-    [Embed(source="BackgroundForest_1.png")]
+    [Embed(source="BackgroundForest_1.jpg")]
     private static var background3Class: Class;
     
     [Embed(source="Shadow_Building1.png")]
@@ -62,7 +56,7 @@ package {
     private static var cloudShadowClass: Class;
     
     [Embed(source="Shadow_Tree.png")]
-    private static var canopyShadowClass: Class;
+    private static var canopyClass: Class;
     
     [Embed(source="Shadow_Wall1.png")]
     private static var wall1ShadowClass: Class;
@@ -78,21 +72,18 @@ package {
         
     private static var spriteList: Object = {
       canopy: canopyClass,
-      clouds: cloudsClass,
       wall1: wall1Class,
       wall2: wall2Class,
       rocks1: rocks1Class,
       building1: building1Class,
       building2: building2Class,
-      grid: gridClass,
+      //grid: gridClass,
       background1: background1Class,
       background2: background2Class,
       background3: background3Class,
       building1Shadow: building1ShadowClass,
       building1VerticalShadow: building1VerticalShadowClass,
       building2Shadow: building2ShadowClass,
-      cloudShadow: cloudShadowClass,
-      canopyShadow: canopyShadowClass,
       wall1Shadow: wall1ShadowClass,
       wall1HorizontalShadow: wall1HorizontalShadowClass
     }
@@ -148,9 +139,9 @@ package {
           <sprite x="225" y="475" rotation="0" type="rocks1" scale="1"/>
           <sprite x="355" y="570" rotation="60" type="rocks1" scale="1"/>
           
-          <sprite x="470" y="455" rotation="0" type="rocks1" scale=".9"/>
-          <sprite x="485" y="450" rotation="220" type="rocks1" scale=".9"/>
-      </layer>
+          <sprite x="470" y="475" rotation="0" type="rocks1" scale=".9"/>
+          <sprite x="485" y="470" rotation="220" type="rocks1" scale=".9"/>
+        </layer>
         <actionLayer>
           <tank x="250" y="250" rotation="90" type="skunk" player="1"/>
           <tank x="575" y="250" rotation="-90" type="punk" player="2"/>
@@ -176,7 +167,7 @@ package {
           <sprite x="200" y="200" rotation="0" type="wall2"/>
           <sprite x="210" y="310" rotation="0" type="wall1Shadow"/>
           <sprite x="200" y="300" rotation="0" type="wall2"/>
-          <sprite x="175" y="175" rotation="0" type="building1Shadow"/>
+          <sprite x="185" y="175" rotation="0" type="building1Shadow" scale=".85"/>
           <sprite x="150" y="150" rotation="0" type="building2"/>
       <!-- Right -->
           <sprite x="380" y="70" rotation="90" type="wall2"/>
@@ -403,7 +394,6 @@ package {
       }
       
       blimp = new blimpClass();
-      blimp.scaleX = blimp.scaleY = 0.5;
       blimp.x = Math.random() * 800 - blimp.width / 2;
       blimp.y = 600;
       cloudLayer.addChild(blimp);

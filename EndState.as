@@ -7,10 +7,10 @@ package{
   import flash.net.*;
   
   public class EndState extends GameState {
-    [Embed(source="WinScreen_Skunk.png")]
+    [Embed(source="WinScreen_Skunk.jpg")]
     private static var WinSkunkClass: Class;
     
-    [Embed(source="WinScreen_Punk.png")]
+    [Embed(source="WinScreen_Punk.jpg")]
     private static var WinPunkClass: Class;
     
     public static var victor: int = 0;

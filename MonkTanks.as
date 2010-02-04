@@ -7,7 +7,8 @@ package{
   import flash.ui.*;
   import flash.desktop.*;
   
-  [SWF(width=800, height=600, frameRate=30, backgroundColor=0x004400)]
+  [SWF(width=800, height=600, frameRate=30, backgroundColor=0x000000)]
+  [Frame(factoryClass="Preloader")]
   public class MonkTanks extends Sprite {
     public static const START_STATE: int    = 0;
     public static const PLAY_STATE: int     = 1;
@@ -18,7 +19,9 @@ package{
     
     private static var _instance: MonkTanks;
     
-    public function MonkTanks(){
+    public function MonkTanks(){}
+    
+    public function init(): void {
       _instance = this;
       state = START_STATE;
       addEventListener(Event.ENTER_FRAME, update);

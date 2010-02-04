@@ -6,7 +6,7 @@ package{
   import flash.utils.*;
   
   public class StartState extends GameState {
-    [Embed(source='Start_Screen.png')]
+    [Embed(source='Start_Screen.jpg')]
     private static const _screenSpriteClass: Class;
     
     [Embed(source='select_map_1.png')]
