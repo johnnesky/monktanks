@@ -22,6 +22,11 @@ package{
     public function MonkTanks(){}
     
     public function init(): void {
+
+      // MochiBot.com -- Version 8
+      // Tested with Flash 9-10, ActionScript 3
+      MochiBot.track(this, "1d097f1a");
+      
       _instance = this;
       state = START_STATE;
       addEventListener(Event.ENTER_FRAME, update);
