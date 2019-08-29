@@ -51,6 +51,9 @@ package {
     [Embed(source="Shadow_Building2.png")]
     private static var building2ShadowClass: Class;
     
+    [Embed(source="Shadow_Building2_noAngle.png")]
+    private static var building2NoAngleShadowClass: Class;
+    
     [Embed(source="Shadow_Cloud.png")]
     private static var cloudShadowClass: Class;
     
@@ -83,6 +86,7 @@ package {
       building1Shadow: building1ShadowClass,
       building1VerticalShadow: building1VerticalShadowClass,
       building2Shadow: building2ShadowClass,
+      building2NoAngleShadow: building2NoAngleShadowClass,
       wall1Shadow: wall1ShadowClass,
       wall1HorizontalShadow: wall1HorizontalShadowClass
     }
@@ -112,41 +116,37 @@ package {
           <sprite x="400" y="600" rotation="0" type="canopy" scale="1.25"/>
       <!-- Left Walls -->
           <sprite x="200" y="400" rotation="0" type="canopy" scale="1.0"/>
-          <sprite x="25" y="325" rotation="0" type="building1Shadow"/>
+          <sprite x="25" y="325" rotation="0" type="building1VerticalShadow"/>
           <sprite x="0" y="300" rotation="90" type="building1"/>
           <sprite x="225" y="175" rotation="0" type="building1Shadow"/>
           <sprite x="200" y="150" rotation="0" type="building1"/>
       <!-- Right Walls -->
           <sprite x="600" y="200" rotation="0" type="canopy"/>
-          <sprite x="825" y="325" rotation="90" type="building1Shadow"/>
+          <sprite x="830" y="325" rotation="0" type="building1VerticalShadow"/>
           <sprite x="800" y="300" rotation="90" type="building1"/>
-          <sprite x="625" y="475" rotation="00" type="building1Shadow"/>   
+          <sprite x="625" y="475" rotation="00" type="building1Shadow"/> 
           <sprite x="600" y="450" rotation="180" type="building1"/>
-      <!-- Clouds
-          <sprite x="300" y="500" rotation="0" type="clouds" scale="1.0"/>
-          <sprite x="500" y="100" rotation="0" type="clouds" scale="1.0"/>
-      -->
         </layer>
       </level>,
       
       <level>
-        <layer>
+         <layer>
           <sprite x="400" y="300" rotation="0" type="background2"/>
-        </layer>
-        <layer>
-      <!-- Rocks -->
+         </layer>
+         <layer>
+        <!-- Rocks -->
           <sprite x="225" y="475" rotation="0" type="rocks1" scale="1"/>
-          <sprite x="355" y="570" rotation="60" type="rocks1" scale="1"/>
+          <sprite x="355" y="570" rotation="90" type="rocks1" scale="1"/>
           
           <sprite x="470" y="475" rotation="0" type="rocks1" scale=".9"/>
           <sprite x="485" y="470" rotation="220" type="rocks1" scale=".9"/>
         </layer>
-        <actionLayer>
+         <actionLayer>
           <tank x="250" y="250" rotation="90" type="skunk" player="1"/>
           <tank x="575" y="250" rotation="-90" type="punk" player="2"/>
-        </actionLayer>
-        <layer>
-      <!-- Forest -->
+         </actionLayer>
+         <layer>
+        <!-- Forest -->
           <sprite x="100" y="500" rotation="0" type="canopy" scale="1"/>
           <sprite x="225" y="550" rotation="0" type="canopy" scale="1.1"/>
           <sprite x="350" y="395" rotation="0" type="canopy" scale="1"/>
@@ -159,22 +159,29 @@ package {
           <sprite x="770" y="500" rotation="0" type="canopy" scale="1.25"/>
           <sprite x="-30" y="500" rotation="0" type="canopy" scale="1.25"/>
           
-      <!-- Left -->
-          <sprite x="250" y="195" rotation="90" type="wall1"/>
-          <sprite x="350" y="195" rotation="90" type="wall1"/>
+        <!-- Left -->
+          <sprite x="265" y="205" rotation="0" type="wall1HorizontalShadow"/>
+          <sprite x="365" y="205" rotation="0" type="wall1HorizontalShadow"/>
           <sprite x="210" y="215" rotation="0" type="wall1Shadow"/>
-          <sprite x="200" y="200" rotation="0" type="wall2"/>
           <sprite x="210" y="310" rotation="0" type="wall1Shadow"/>
+      
+        <sprite x="168" y="172" rotation="0" type="building2NoAngleShadow" scale="1.3"/>
+      
+        <sprite x="245" y="195" rotation="90" type="wall2"/>
+          <sprite x="345" y="195" rotation="90" type="wall2"/>
+          <sprite x="200" y="200" rotation="0" type="wall2"/>
           <sprite x="200" y="300" rotation="0" type="wall2"/>
-          <sprite x="185" y="175" rotation="0" type="building1Shadow" scale=".85"/>
           <sprite x="150" y="150" rotation="0" type="building2"/>
-      <!-- Right -->
-          <sprite x="380" y="70" rotation="90" type="wall2"/>
-          <sprite x="480" y="70" rotation="90" type="wall2"/>
-          <sprite x="580" y="70" rotation="90" type="wall2"/>
+        <!-- Right -->
+          <sprite x="400" y="80" rotation="0" type="wall1HorizontalShadow"/>
+          <sprite x="500" y="80" rotation="0" type="wall1HorizontalShadow"/>
+          <sprite x="600" y="80" rotation="0" type="wall1HorizontalShadow"/>
           <sprite x="530" y="262" rotation="0" type="wall1Shadow"/>
-          <sprite x="520" y="242" rotation="0" type="wall1"/>
           <sprite x="625" y="375" rotation="0" type="building1Shadow"/>
+          <sprite x="380" y="70" rotation="90" type="wall1"/>
+          <sprite x="480" y="70" rotation="90" type="wall1"/>
+          <sprite x="580" y="70" rotation="90" type="wall1"/>
+          <sprite x="520" y="242" rotation="0" type="wall1"/>
           <sprite x="600" y="350" rotation="0" type="building1"/>
         </layer>
       </level>,
@@ -188,10 +195,10 @@ package {
           <sprite x="40" y="175" rotation="0" type="rocks1" scale="1"/>
           <sprite x="80" y="400" rotation="60" type="rocks1" scale="1"/>
           <sprite x="380" y="100" rotation="30" type="rocks1" scale="1"/>
-          <sprite x="425" y="480" rotation="50" type="rocks1" scale="1"/>
-          <sprite x="500" y="280" rotation="110" type="rocks1" scale="1"/>
-          <sprite x="685" y="450" rotation="220" type="rocks1" scale="1"/>
-          <sprite x="705" y="200" rotation="270" type="rocks1" scale="1"/>
+          <sprite x="425" y="480" rotation="-90" type="rocks1" scale="1"/>
+          <sprite x="500" y="280" rotation="90" type="rocks1" scale="1"/>
+          <sprite x="685" y="450" rotation="270" type="rocks1" scale="1"/>
+          <sprite x="705" y="200" rotation="0" type="rocks1" scale="1"/>
         </layer>
         <actionLayer>
           <tank x="225" y="300" rotation="90" type="skunk" player="1"/>
@@ -199,19 +206,19 @@ package {
         </actionLayer>
         <layer>
       <!-- Walls -->
-          <sprite x="196" y="318" rotation="0" type="wall1Shadow" scale="1"/>
-          <sprite x="276" y="318" rotation="0" type="wall1Shadow" scale="1"/>
-          <sprite x="185" y="300" rotation="0" type="wall2" scale="1"/>
-<!--          <sprite x="236" y="258" rotation="0" type="wall2Shadow" scale="1"/> -->
-          <sprite x="225" y="240" rotation="90" type="wall2" scale="1"/>
-          <sprite x="265" y="300" rotation="0" type="wall2" scale="1"/>
+          <sprite x="196" y="318" rotation="0" type="wall1Shadow"/>
+          <sprite x="276" y="318" rotation="0" type="wall1Shadow"/>
+          <sprite x="245" y="250" rotation="0" type="wall1HorizontalShadow"/>
+          <sprite x="185" y="300" rotation="0" type="wall2"/>
+          <sprite x="225" y="240" rotation="90" type="wall2"/>
+          <sprite x="265" y="300" rotation="0" type="wall2"/>
           
-          <sprite x="546" y="318" rotation="0" type="wall1Shadow" scale="1"/>
-          <sprite x="626" y="318" rotation="0" type="wall1Shadow" scale="1"/>
-          <sprite x="535" y="300" rotation="0" type="wall1" scale="1"/>
-<!--          <sprite x="586" y="378" rotation="0" type="wall2Shadow" scale="1"/> -->
-          <sprite x="575" y="360" rotation="90" type="wall1" scale="1"/>
-          <sprite x="615" y="300" rotation="0" type="wall1" scale="1"/>
+          <sprite x="546" y="318" rotation="0" type="wall1Shadow"/>
+          <sprite x="626" y="318" rotation="0" type="wall1Shadow"/>
+          <sprite x="595" y="370" rotation="0" type="wall1HorizontalShadow"/>
+          <sprite x="535" y="300" rotation="0" type="wall1"/>
+          <sprite x="575" y="360" rotation="90" type="wall1"/>
+          <sprite x="615" y="300" rotation="0" type="wall1"/>
       <!-- Forest -->
           <sprite x="150" y="-25" rotation="0" type="canopy" scale="1"/>
           <sprite x="150" y="575" rotation="0" type="canopy" scale="1"/>
@@ -269,6 +276,7 @@ package {
     private var matchEnded: Boolean = false;
     private var ticksUntilEndScreen: int = 3000;
     private var ticksUntilPowerup: int;
+    private var ticksUntilCloud: int;
     
     public function PlayState(stage: Stage) {
       stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
@@ -387,9 +395,21 @@ package {
         var cloud: DisplayObject = new cloudShadowClass();
         cloud.x = Math.random() * 800;
         cloud.y = Math.random() * 600;
-        clouds.push(cloud);
-        cloudLayer.addChild(cloud);
+        
+        var j: int = 0;
+        for (; j < clouds.length; j++) {
+          if (clouds[j].y > cloud.y) {
+            cloudLayer.addChildAt(cloud, cloudLayer.getChildIndex(clouds[j]));
+            clouds.splice(j, 0, cloud);
+            break;
+          }
+        }
+        if (j == clouds.length) {
+          cloudLayer.addChild(cloud);
+          clouds.push(cloud);
+        }
       }
+      ticksUntilCloud = 2000 + Math.random() * 8000;
       
       blimp = new blimpClass();
       blimp.x = Math.random() * 800 - blimp.width / 2;
@@ -414,7 +434,8 @@ package {
       
       var iconSkunk:Bitmap = new IconSkunkClass();
       iconSkunk.x=5
-      iconSkunk.y=-2
+      iconSkunk.y=6
+      iconSkunk.scaleX = iconSkunk.scaleY = 0.85;
       hudLayer.addChild(iconSkunk)
       var iconPunk:Bitmap = new IconPunkClass();
       iconPunk.x=795-iconPunk.width
@@ -435,6 +456,8 @@ package {
     }
     
     public override function update(ticks: int): void {
+      var i : int = 0;
+      
       if (matchEnded) {
         ticksUntilEndScreen -= ticks;
         if (ticksUntilEndScreen <= 0) {
@@ -443,21 +466,34 @@ package {
         }
       }
       
-      if (Math.random() * Math.random() > 0.93) {
+      ticksUntilCloud -= ticks;
+      if (ticksUntilCloud <= 0) {
         var cloud: DisplayObject = new cloudShadowClass();
-        cloud.x = -300;
+        cloud.x = -400;
         cloud.y = Math.random() * 600;
-        clouds.push(cloud);
-        cloudLayer.addChild(cloud);
+        
+        var j: int = 0;
+        for (; j < clouds.length; j++) {
+          if (clouds[j].y > cloud.y) {
+            cloudLayer.addChildAt(cloud, cloudLayer.getChildIndex(clouds[j]));
+            clouds.splice(j, 0, cloud);
+            break;
+          }
+        }
+        if (j == clouds.length) {
+          cloudLayer.addChild(cloud);
+          clouds.push(cloud);
+        }
+        ticksUntilCloud = 8000 + Math.random() * 20000;
       }
       
-      for (var j: int = 0; j < clouds.length; ) {
-        clouds[j].x += 0.5;
-        if (clouds[j].x > 800) {
-          cloudLayer.removeChild(clouds[j]);
-          clouds.splice(j, 1);
+      for (i = 0; i < clouds.length; ) {
+        clouds[i].x += 0.5;
+        if (clouds[i].x > 800) {
+          cloudLayer.removeChild(clouds[i]);
+          clouds.splice(i, 1);
         } else {
-          j++;
+          i++;
         }
       }
       
@@ -531,7 +567,7 @@ package {
       }
 			
 			// Go through body list and update sprite positions/rotations
-      var i : int = 0;
+      i = 0;
 			for (var bb:b2Body = physWorld.GetBodyList(); bb; bb = bb.GetNext())
       {
 				if (bb.GetUserData() is Entity)
